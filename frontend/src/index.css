@@ -1,0 +1,180 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --background: 222 47% 6%;
+        --foreground: 210 40% 96%;
+        --card: 222 40% 12%;
+        --card-foreground: 210 40% 96%;
+        --popover: 222 44% 9%;
+        --popover-foreground: 210 40% 96%;
+        --primary: 160 84% 39%;
+        --primary-foreground: 222 47% 6%;
+        --secondary: 222 30% 18%;
+        --secondary-foreground: 210 40% 96%;
+        --muted: 222 26% 16%;
+        --muted-foreground: 215 20% 68%;
+        --accent: 199 89% 60%;
+        --accent-foreground: 222 47% 6%;
+        --destructive: 0 72% 51%;
+        --destructive-foreground: 210 40% 98%;
+        --border: 220 28% 22%;
+        --input: 220 28% 22%;
+        --ring: 160 84% 45%;
+        --radius: 0.85rem;
+        --chart-1: 160 84% 45%;
+        --chart-2: 199 89% 60%;
+        --chart-3: 38 92% 55%;
+        --chart-4: 271 81% 66%;
+        --chart-5: 14 90% 62%;
+    }
+}
+
+* {
+    border-color: hsl(var(--border));
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 90px;
+}
+
+body {
+    margin: 0;
+    background-color: #090d16;
+    color: hsl(var(--foreground));
+    font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+    background: rgba(16, 185, 129, 0.35);
+    color: #ecfdf5;
+}
+
+.font-display {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    letter-spacing: -0.015em;
+}
+
+.font-data {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+}
+
+.dv-surface {
+    background-color: rgba(19, 27, 46, 0.85);
+    border: 1px solid rgba(35, 49, 77, 0.9);
+}
+
+.dv-glass {
+    background-color: rgba(15, 23, 42, 0.72);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(51, 65, 85, 0.55);
+}
+
+.dv-grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.dv-aurora {
+    background:
+        radial-gradient(60% 50% at 12% 8%, rgba(16, 185, 129, 0.18), transparent 65%),
+        radial-gradient(55% 45% at 88% 12%, rgba(56, 189, 248, 0.16), transparent 62%),
+        radial-gradient(50% 45% at 50% 100%, rgba(168, 85, 247, 0.12), transparent 65%);
+}
+
+.dv-link-underline {
+    position: relative;
+}
+
+.dv-link-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    height: 1px;
+    width: 0;
+    background: linear-gradient(90deg, #10b981, #38bdf8);
+    transition: width 0.28s ease;
+}
+
+.dv-link-underline:hover::after {
+    width: 100%;
+}
+
+.dv-hairline {
+    background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.28), transparent);
+    height: 1px;
+}
+
+@keyframes dv-rise {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.dv-rise {
+    animation: dv-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes dv-pulse-ring {
+    0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.45);
+    }
+    100% {
+        box-shadow: 0 0 0 18px rgba(16, 185, 129, 0);
+    }
+}
+
+.dv-pulse-ring {
+    animation: dv-pulse-ring 1.8s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+    .dv-rise,
+    .dv-pulse-ring {
+        animation: none !important;
+    }
+    * {
+        transition-duration: 0.01ms !important;
+    }
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+    background: #0b1120;
+}
+::-webkit-scrollbar-thumb {
+    background: #1f2b44;
+    border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #2c3c5e;
+}
+
+@layer base {
+    [data-debug-wrapper="true"] {
+        display: contents !important;
+    }
+}

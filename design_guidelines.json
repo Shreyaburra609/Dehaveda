@@ -1,0 +1,135 @@
+{
+  "project_name": "DEHA VEDA ECOSYSTEM",
+  "tagline": "Explore. Understand. Improve.",
+  "archetype": "ORGANIC & EARTHY + MODERN TECH PRECISION",
+  "theme_strategy": {
+    "default_mode": "dark",
+    "toggle_supported": true,
+    "background_base": "bg-[#090D16]",
+    "surface_cards": "bg-[#131B2E]",
+    "card_border": "border-[#23314D]",
+    "glass_morphism": "backdrop-blur-xl bg-[#0F172A]/80 border border-slate-700/50"
+  },
+  "typography": {
+    "headings": {
+      "font_family": "'Cormorant Garamond', 'Outfit', sans-serif",
+      "h1": "text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight",
+      "h3": "text-xl sm:text-2xl font-semibold",
+      "h4": "text-lg sm:text-xl font-medium"
+    },
+    "body": {
+      "font_family": "'Plus Jakarta Sans', 'Manrope', sans-serif",
+      "size": "text-base sm:text-sm leading-relaxed"
+    },
+    "monospace_data": {
+      "font_family": "'JetBrains Mono', monospace",
+      "size": "text-xs sm:text-sm tracking-wider"
+    },
+    "rules": "DO NOT use Inter or Space Grotesk for headings. Headings must always use tracking-tight or tracking-tighter."
+  },
+  "colors": {
+    "brand_primary": {
+      "main": "#10B981",
+      "hover": "#059669",
+      "light": "#A7F3D0",
+      "dark_bg": "#064E3B"
+    },
+    "brand_secondary": {
+      "main": "#38BDF8",
+      "hover": "#0284C7"
+    },
+    "pillars": {
+      "ahara": {
+        "name": "AHARA — Food & Nutrition",
+        "primary": "#E07A5F",
+        "secondary": "#F2CC8F",
+        "badge": "bg-amber-500/10 text-amber-400 border-amber-500/30"
+      },
+      "jala": {
+        "name": "JALA — Water & Hydration",
+        "primary": "#38BDF8",
+        "secondary": "#0284C7",
+        "badge": "bg-sky-500/10 text-sky-400 border-sky-500/30"
+      },
+      "swara": {
+        "name": "SWARA — Sound & Vibrations",
+        "primary": "#A855F7",
+        "secondary": "#EC4899",
+        "badge": "bg-purple-500/10 text-purple-400 border-purple-500/30"
+      },
+      "manas": {
+        "name": "MANAS — Mind & Consciousness",
+        "primary": "#10B981",
+        "secondary": "#059669",
+        "badge": "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+      },
+      "games": {
+        "name": "GAMES — Mind & Cognitive Training",
+        "primary": "#6366F1",
+        "secondary": "#F59E0B",
+        "badge": "bg-indigo-500/10 text-indigo-400 border-indigo-500/30"
+      }
+    },
+    "forbidden_colors": ["#7351B7", "#1B93A4"]
+  },
+  "spacing_and_layout": {
+    "grid_modes": {
+      "mode_a_hero_and_pillars": "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 lg:gap-8",
+      "mode_b_dashboard_and_games": "grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"
+    },
+    "padding_rules": "Generous spacing philosophy: use p-6, p-8, or p-12 for content cards with 1px border. Never touch text edges to card borders.",
+    "direct_child_rule": "CRITICAL: All motion.div or animated cards inside CSS grid MUST be direct children or styled with layout wrappers correctly."
+  },
+  "navigation": {
+    "header_style": "sticky top-0 z-50 w-full bg-[#090D16]/90 backdrop-blur-md border-b border-slate-800/80 px-4 lg:px-8 py-3.5",
+    "required_links": [
+      { "label": "Ecosystem", "path": "/#pillars", "testid": "nav-link-pillars" },
+      { "label": "Ahara Food", "path": "/ahara", "testid": "nav-link-ahara" },
+      { "label": "Jala Water", "path": "/jala", "testid": "nav-link-jala" },
+      { "label": "Swara Sound", "path": "/swara", "testid": "nav-link-swara" },
+      { "label": "Manas 3D Mind", "path": "/manas", "testid": "nav-link-manas" },
+      { "label": "Mind Games", "path": "/games", "testid": "nav-link-games" },
+      { "label": "Membership", "path": "/membership", "testid": "nav-link-membership" },
+      { "label": "About", "path": "/about", "testid": "nav-link-about" },
+      { "label": "Contact", "path": "/contact", "testid": "nav-link-contact" }
+    ],
+    "header_cta": {
+      "label": "Subscribe Premium",
+      "path": "/membership",
+      "testid": "nav-cta-membership"
+    }
+  },
+  "image_urls": {
+    "hero": "https://images.pexels.com/photos/32629853/pexels-photo-32629853.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "ahara_food": "https://images.unsplash.com/photo-1667889244750-6d5246c84bb5?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDJ8MHwxfHNlYXJjaHwzfHxheXVydmVkYSUyMHdlbGxuZXNzJTIwb3JnYW5pYyUyMGZvb2QlMjB3YXRlciUyMG1pbmQlMjBtaW5kZnVsbmVzc3xlbnwwfHx8fDE3ODgyNjIyNzV8MA&ixlib=rb-4.1.0&q=85",
+    "jala_water": "https://images.unsplash.com/photo-1661695013455-b2edf4983179?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDJ8MHwxfHNlYXJjaHwyfHxheXVydmVkYSUyMHdlbGxuZXNzJTIwb3JnYW5pYyUyMGZvb2QlMjB3YXRlciUyMG1pbmQlMjBtaW5kZnVsbmVzc3xlbnwwfHx8fDE3ODgyNjIyNzV8MA&ixlib=rb-4.1.0&q=85",
+    "swara_sound": "https://images.pexels.com/photos/7519797/pexels-photo-7519797.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "manas_mind": "https://images.unsplash.com/photo-1627728724901-e79f35800820?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDJ8MHwxfHNlYXJjaHwxfHxheXVydmVkYSUyMHdlbGxuZXNzJTIwb3JnYW5pYyUyMGZvb2QlMjB3YXRlciUyMG1pbmQlMjBtaW5kZnVsbmVzc3xlbnwwfHx8fDE3ODgyNjIyNzV8MA&ixlib=rb-4.1.0&q=85",
+    "community_group": "https://images.unsplash.com/photo-1700756882452-967c1c905a99?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDJ8MHwxfHNlYXJjaHw0fHxheXVydmVkYSUyMHdlbGxuZXNzJTIwb3JnYW5pYyUyMGZvb2QlMjB3YXRlciUyMG1pbmQlMjBtaW5kZnVsbmVzc3xlbnwwfHx8fDE3ODgyNjIyNzV8MA&ixlib=rb-4.1.0&q=85"
+  },
+  "interactive_components": {
+    "ahara": ["Food Database with Search & Category Filters", "Interactive Calorie & Macro Calculator", "Dosha/Ayurveda Diet Matcher"],
+    "jala": ["5-Stage Water Journey Stepper", "Water Quality Parameter Explorer (pH, TDS, Hardness, Micro-plastics)", "Contamination Warning Guide"],
+    "swara": ["7-Note Solfeggio / Swara Selector (Sa, Re, Ga, Ma, Pa, Dha, Ni)", "Web Audio API Synthesizer / Audio Player", "Vibrational Frequency Hz Visualizer"],
+    "manas": ["Interactive 3D Brain model using React Three Fiber / Canvas", "Clickable Brain Regions (Prefrontal Cortex, Amygdala, Hippocampus, Occipital)", "Mindfulness & Meditation Tracker"],
+    "games": ["Reaction Time Test", "Memory Sequence (Simon Says style)", "Number Memory", "Visual Memory Grid", "Pattern Recognition", "Dashboard with High Scores & Analytics"],
+    "ai_assistant": "Floating Widget 'Deha Veda AI Assistant' available site-wide with prompt suggestions",
+    "membership": "Free vs 1-Month Premium toggle, Live Subscriber Counter, QR Code Scan-to-Subscribe modal/drawer",
+    "admin": "Admin Dashboard with charts (Recharts/Shadcn) showing member breakdown, pillar engagement, game stats"
+  },
+  "testing_and_accessibility": {
+    "data_testid_convention": "All interactive elements (buttons, inputs, links, cards, modals, nav links) MUST have data-testid in kebab-case format.",
+    "keyboard_navigation": "Full focus states with focus:ring-2 focus:ring-emerald-400 focus:outline-none.",
+    "reduced_motion": "Respect prefers-reduced-motion in Framer Motion / CSS transitions."
+  },
+  "instructions_to_main_agent": [
+    "Use JavaScript (.js/.jsx) files, not TypeScript.",
+    "Implement the 5 pillars (Ahara, Jala, Swara, Manas, Games) with full interactive tools.",
+    "Ensure the floating AI Chatbot widget operates across all routes.",
+    "Include data-testid on every interactive button, link, tab, input, and card element.",
+    "Use proper background colors for navbar (no fully transparent header over text).",
+    "Verify mobile responsive layouts, stacking pillar cards on small screens.",
+    "Make sure 3D Brain component in Manas works smoothly with fallback for non-Web GL devices."
+  ]
+}

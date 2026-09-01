@@ -1,0 +1,57 @@
+{
+  "summary": "First full e2e test run of DEHA VEDA ECOSYSTEM. Backend: created pytest suite (55 tests) covering auth (register/login/me/logout/lockout), community stats, foods + search + category + premium gating, calorie tool math & validation, jala/swara/manas/games content, game score submission + dashboard + premium 403, contact, plans, membership claim + admin manual verification, all admin endpoints, AI chat SSE streaming, bcrypt hash format, cookies, CORS, QR asset. 54/55 passed (98%). Frontend: verified Home (live DB stats, 5 pillar cards, gallery controls, plans), all navbar routes, mobile menu + card stacking at 390x844, Ahara search/category/empty-state/calorie calculator, Jala journey stepper + 10 parameter tabs + gallery, Swara selector + audio + premium locks, Manas 3D brain (WebGL canvas, zoom/reset, 8 clickable regions, no JS errors), Games (reaction, number memory, memory sequence, pattern for premium, dashboard from localStorage), AI chatbot streaming a real on-topic answer with non-medical caveat, register->community count +1, logout/login, invalid-login error string, premium gating for free logged-in user, membership QR + claim -> pending (NOT premium), admin verify -> premium activates and unlocks content, admin dashboard KPIs + 3 recharts, all 6 admin tabs, plan price edit propagating to /membership, admin food add appearing in Ahara search, contact validation + success + visible in Admin Messages, legal pages, 404 page. CRITICAL security requirement (premium only after admin verification) VERIFIED at API and UI level.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "CORS middleware (server.py:806-812)", "issue": "CORS_ORIGINS=\"*\" is used with allow_credentials=True. Starlette then returns Access-Control-Allow-Origin: * and no Access-Control-Allow-Credentials, which browsers reject for credentialed (cookie) cross-origin calls. Works today only because the SPA is same-origin. Set CORS_ORIGINS to the explicit preview/production origin(s)."},
+      {"endpoint": "POST /api/auth/login (brute-force lockout)", "issue": "Lockout key is f\"{request.client.host}:{email}\" but the k8s ingress presents multiple proxy IPs (observed 10.208.134.70 and 10.208.134.66 for the same client). The counter is therefore split per proxy IP, so an attacker gets 5 x N attempts before any 429. Key the lockout on the email (and/or X-Forwarded-For) instead."},
+      {"endpoint": "GET /api/swara, /api/jala (gate() helper, server.py:410)", "issue": "gate() strips every field except name/title/type for locked items, so locked swaras lose index/short/symbol. Frontend then renders key={s.index}=undefined (React duplicate-key warning on every Swara page load) and testids degrade to swara-button-3..6 instead of swara-button-Ma/Pa/Dha/Ni. Keep non-sensitive identity fields (id/index/short/symbol/name) in the locked payload."},
+      {"endpoint": "POST /api/auth/register", "issue": "rate_limit(reg:<ip>, 10, 3600) is per client IP; behind the shared ingress IP this caps the whole platform (and QA) at 10 registrations/hour, and the bucket is in-process memory so it resets on restart and is not shared across replicas. Consider a DB-backed limit keyed more granularly."},
+      {"endpoint": "POST /api/track", "issue": "`path` is taken as a raw query parameter with no Pydantic model/validation; page_views stayed empty during the whole run (Popular Pages panel shows 'No page views recorded yet.'), so the tracking call appears not to be wired from the frontend."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Swara page", "issue": "React console warning 'Each child in a list should have a unique key prop (Swara)' on every load, because locked swaras have no `index` (backend gate strips it). Premium swara buttons also render symbol '•' and testids swara-button-3..6 rather than Ma/Pa/Dha/Ni.", "selector": "[data-testid^=\"swara-button-\"]", "priority": "MEDIUM"},
+      {"component": "Games dashboard (Games.jsx loadDash)", "issue": "Dashboard counters (dash-games-played / dash-total-score) only refresh on [user, active] changes, so after finishing a game they stay stale (showed 0 while the reaction game had recorded 2 scores; correct values appeared only after reload/game switch).", "selector": "[data-testid=\"dash-games-played\"]", "priority": "MEDIUM"},
+      {"component": "Games play-area action row (mobile 390x844)", "issue": "Play Again / Try Another Game / View My Scores row is clipped at the right edge on mobile ('View My…' cut off) instead of wrapping.", "selector": "[data-testid=\"view-scores-button\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Membership — QR placeholder note", "issues": ["The inline <code>/public/payment-qr.png</code> chip breaks the sentence into 3 mis-ordered visual fragments ('This image is a placeholder at /public/payment-qr.png . Replace it…' renders as broken lines). Use a non-wrapping code span or move the path to its own line."]},
+      {"screen": "Manas — 3D brain", "issues": ["Model reads as two plain pink ellipsoids plus a wireframe sphere; acceptable as 'simplified educational model' but visually crude relative to the rest of the design."]},
+      {"screen": "Ahara / admin forms", "issues": ["Native browser <select> elements are used for sex/activity/goal instead of the shadcn Select used elsewhere — inconsistent with the dark theme styling."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/backend/tests/conftest.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Set CORS_ORIGINS to explicit origin(s) in backend/.env instead of \"*\" since allow_credentials=True (spec-invalid combination).",
+    "Fix brute-force lockout key so multiple ingress proxy IPs cannot dilute the 5-attempt counter (key on email / X-Forwarded-For).",
+    "Stop stripping identity fields (index/short/symbol) for locked items in gate() — fixes the React duplicate-key warning and restores swara-button-Ma/Pa/Dha/Ni testids.",
+    "Refresh the games dashboard after a score is recorded (callback/state bump from useScoreRecorder) so counters are not stale.",
+    "Wire (or remove) POST /api/track — Popular Pages is permanently empty; also validate `path` via a Pydantic body model.",
+    "Mobile: allow the game action button row to wrap at 390px; fix the membership QR placeholder sentence layout."
+  ],
+  "critical_code_review_comments": [
+    "server.py is 812 lines and mixes auth, content, games, chat, payments and admin — split into routers (auth.py, content.py, games.py, admin.py) before it grows further.",
+    "rate_limit() uses a process-local defaultdict; it resets on restart and does not work with more than one backend replica. Move to Mongo/Redis for anything security relevant.",
+    "gate() builds locked payloads from a hardcoded field whitelist ('name','title','type'); this silently breaks any UI that needs another identity field (already observed in Swara). Invert the logic: strip the premium-only fields instead.",
+    "/api/admin/stats issues 7 sequential count_documents calls in a Python loop for the registrations chart; use one $group aggregation.",
+    "public_user() returns premium_until as a raw ISO string and is_premium_active swallows bad values silently — a corrupted premium_until would silently downgrade a paying user with no log."
+  ],
+  "updated_files": [
+    "/app/backend/tests/backend_test.py",
+    "/app/backend/tests/conftest.py"
+  ],
+  "success_rate": {"backend": "98% (54/55 pytest)", "frontend": "~95% of tested flows passed; 3 non-blocking UI defects"},
+  "seed_data_creation": "Created ~7 API test users (test_<hex>@dvtest.com / TestPass@2026) and one UI user uitest_1788264136@dvtest.com / UiTest@2026 (now PREMIUM via a verified claim). Test foods and one claim were created and cleaned up; contact messages named TEST_* remain in the DB.",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "Admin admin@dehaveda.com / DehaVeda@2026 (works). Premium test user: uitest_1788264136@dvtest.com / UiTest@2026. Free test users: registered on demand (register is rate-limited to 10/hour per IP — restart backend to clear the in-memory bucket before heavy UI registration testing).",
+  "context_for_next_testing_agent": "pytest suite lives at /app/backend/tests/backend_test.py (+conftest.py) and runs with the pre-configured -n 2 --dist loadscope. User-creating fixtures are class/session scoped on purpose because /api/auth/register is limited to 10/hour per IP. Only the CORS test fails (real config issue). Correct testids that differ from the review request: contact form uses contact-name/contact-email/contact-subject/contact-message (no -input suffix); admin food form uses food-input-name/category/serving_size/calories/protein_g/carbs_g/fat_g/fiber_g; admin tab is admin-tab-food-content; mobile nav links are m-nav-link-*; Home plan cards are home-plan-<code> (plan-card-* are on /membership). pattern-feedback is transient (~750-1100ms) so assert it within 1s. Manual-verification security requirement was verified end to end and passes.",
+  "rca_of_the_issue": "Brute-force lockout gap: login stores failed attempts under identifier '<request.client.host>:<email>'. In this k8s preview the ingress forwards from several proxy pods, so consecutive attempts from one client landed on identifiers 10.208.134.70:<email> and 10.208.134.66:<email> (verified directly in the login_attempts collection); each counter reached only 3-4, so the 6th attempt still returned 401 instead of 429. Lockout eventually triggers after ~10 attempts. Fix: key on the email (optionally combined with the leftmost X-Forwarded-For address)."
+}
