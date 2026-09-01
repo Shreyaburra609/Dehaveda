@@ -47,9 +47,9 @@ export default function NumberMemory() {
   return (
     <div data-testid="game-number">
       <div className="dv-surface flex h-52 items-center justify-center rounded-3xl">
-        {phase === "idle" && <p className="text-sm text-slate-400">Press start. A number will appear briefly.</p>}
+        {phase === "idle" && <p className="text-sm text-slate-600">Press start. A number will appear briefly.</p>}
         {phase === "show" && (
-          <p data-testid="number-display" className="font-data text-4xl tracking-[0.2em] text-emerald-300 sm:text-5xl">
+          <p data-testid="number-display" className="font-data text-4xl tracking-[0.2em] text-emerald-700 sm:text-5xl">
             {number}
           </p>
         )}
@@ -64,16 +64,16 @@ export default function NumberMemory() {
               onChange={(e) => setGuess(e.target.value.replace(/\D/g, ""))}
               className="font-data text-center text-lg tracking-[0.2em]"
             />
-            <Button data-testid="number-submit" type="submit" className="mt-4 w-full rounded-full bg-emerald-500 text-slate-950 hover:bg-emerald-400">
+            <Button data-testid="number-submit" type="submit" className="mt-4 w-full rounded-full bg-emerald-600 text-white hover:bg-emerald-700">
               Submit
             </Button>
           </form>
         )}
-        {phase === "correct" && <p data-testid="number-correct" className="font-display text-2xl text-emerald-300">Correct! Adding a digit…</p>}
+        {phase === "correct" && <p data-testid="number-correct" className="font-display text-2xl text-emerald-700">Correct! Adding a digit…</p>}
         {phase === "over" && (
           <div className="text-center">
-            <p data-testid="number-over" className="font-display text-2xl text-red-300">Not quite.</p>
-            <p className="font-data mt-2 text-sm text-slate-400">It was {number}</p>
+            <p data-testid="number-over" className="font-display text-2xl text-red-600">Not quite.</p>
+            <p className="font-data mt-2 text-sm text-slate-600">It was {number}</p>
           </div>
         )}
       </div>
@@ -90,7 +90,7 @@ export default function NumberMemory() {
           setDigits(3);
           startRound(3);
         }}
-        className="mt-4 rounded-full bg-emerald-500 text-slate-950 hover:bg-emerald-400"
+        className="mt-4 rounded-full bg-emerald-600 text-white hover:bg-emerald-700"
       >
         {phase === "idle" ? "Start" : "Restart"}
       </Button>

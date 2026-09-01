@@ -65,11 +65,35 @@ Tagline: **Explore. Understand. Improve.**
 - SEO: per-page titles/descriptions/OG/canonical, semantic headings, alt text, robots.txt, sitemap.xml.
 - `/app/DEPLOYMENT.md` and `/app/.env.example` for domain, DNS, HTTPS, keys, QR and first admin.
 
+## Implemented — iteration 2 (2026-06)
+- **Light professional theme**: whole site converted from dark to white. Source Serif 4 (display),
+  IBM Plex Sans (body), IBM Plex Mono (data), plus Noto Sans/Serif Devanagari, Telugu, Tamil and Kannada
+  so Indic scripts render correctly. Accent colours darkened where used as small text for WCAG AA.
+- **More imagery**: `GALLERIES` in `lib/api.js` supplies curated image sets. Ahara header thumbnails +
+  gallery carousel, Swara header image + per-swara image behind the symbol + gallery, Manas header image +
+  gallery, per-game card thumbnails matched to each game, About image strip.
+- **Hanuman Chalisa (Swara pillar)**: `backend/chalisa.py` holds 3 dohas + 40 chaupais with Devanagari,
+  Latin transliteration and meanings in English, Hindi, Telugu, Tamil and Kannada. `GET /api/swara/chalisa`
+  serves it; the UI (`components/HanumanChalisa.jsx`) has a language selector that switches the intro and
+  every verse meaning. Audio via OpenAI TTS (`POST /api/swara/chalisa/audio` → `GET /api/tts/{key}.mp3`),
+  generated server-side and cached on disk; separate buttons for the verse recitation and the meaning.
+  Presented explicitly as cultural/literary heritage with devotional claims marked as traditional belief.
+- **Premium gating is now a switch, OFF by default**: `db.settings` document `{key:"gating"}`.
+  While OFF, every food entry, water parameter, swara, mind topic and game is free for everyone.
+  Admin → Access tab (`gating-toggle`) turns it ON when the platform has grown, after which premium
+  content requires an active subscription. `GET /api/settings` exposes the flag; the membership page shows
+  a launch-offer banner while gating is off.
+- Contact form now uses `noValidate` so the app's own inline field errors always display.
+
 ## Backlog
 ### P0
 - Online recurring checkout (Stripe or Razorpay) with webhook signature verification.
 - Move rate limiting and login lockout to MongoDB/Redis so they survive restarts and multiple replicas.
 ### P1
+- Cache the gating settings document in-process with a short TTL (currently one Mongo read per gated request).
+- Size cap / eviction for `backend/audio_cache`, and move TTS files to object storage so they survive rebuilds
+  and are shared across replicas. Pre-warm or background-generate the first Chalisa recitation (uncached
+  generation measured at up to ~37 s).
 - Split `server.py` into routers (auth, content, games, admin, payments).
 - Admin editing for Jala/Swara/Manas content (endpoints exist via `editable_content`, no UI yet).
 - Email delivery for contact replies and subscription receipts (Resend/SendGrid).

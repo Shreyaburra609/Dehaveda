@@ -62,8 +62,8 @@ export default function VisualMemory() {
           const revealed = phase === "show" || phase === "over";
           const isTarget = targets.includes(i);
           const isPicked = picked.includes(i);
-          let cls = "bg-slate-800/70";
-          if ((revealed && isTarget) || (isPicked && isTarget)) cls = "bg-emerald-400";
+          let cls = "bg-slate-200/70";
+          if ((revealed && isTarget) || (isPicked && isTarget)) cls = "bg-emerald-500";
           else if (isPicked && !isTarget) cls = "bg-red-500/80";
           return (
             <button
@@ -72,7 +72,7 @@ export default function VisualMemory() {
               onClick={() => click(i)}
               disabled={phase !== "input"}
               aria-label={`Cell ${i + 1}`}
-              className={`aspect-square rounded-lg border border-slate-800 transition-colors duration-200 ${cls}`}
+              className={`aspect-square rounded-lg border border-slate-200 transition-colors duration-200 ${cls}`}
             />
           );
         })}
@@ -91,7 +91,7 @@ export default function VisualMemory() {
             setLevel(1);
             startLevel(1);
           }}
-          className="rounded-full bg-emerald-500 text-slate-950 hover:bg-emerald-400"
+          className="rounded-full bg-emerald-600 text-white hover:bg-emerald-700"
         >
           {phase === "idle" ? "Start" : "Restart"}
         </Button>

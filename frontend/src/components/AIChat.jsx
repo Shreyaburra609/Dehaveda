@@ -114,7 +114,7 @@ export function AIChat() {
         data-testid="ai-chat-toggle"
         aria-label="Open Deha Veda AI Assistant"
         onClick={() => setOpen((v) => !v)}
-        className="fixed bottom-5 right-5 z-[60] flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-sky-500 text-slate-950 shadow-2xl shadow-emerald-500/25 transition-transform hover:scale-105 active:scale-95"
+        className="fixed bottom-5 right-5 z-[60] flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-sky-500 text-white shadow-2xl shadow-emerald-500/25 transition-transform hover:scale-105 active:scale-95"
       >
         {open ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
       </button>
@@ -124,10 +124,10 @@ export function AIChat() {
           data-testid="ai-chat-panel"
           className="dv-glass fixed bottom-24 right-3 z-[60] flex h-[70vh] w-[calc(100vw-1.5rem)] max-w-[400px] flex-col overflow-hidden rounded-3xl shadow-2xl sm:right-5"
         >
-          <div className="flex items-center gap-3 border-b border-slate-700/60 px-5 py-4">
-            <Sparkles className="h-4 w-4 text-emerald-400" />
+          <div className="flex items-center gap-3 border-b border-slate-300/60 px-5 py-4">
+            <Sparkles className="h-4 w-4 text-emerald-600" />
             <div>
-              <p className="font-display text-base font-semibold text-slate-50">Deha Veda AI Assistant</p>
+              <p className="font-display text-base font-semibold text-slate-900">Deha Veda AI Assistant</p>
               <p className="text-[10px] text-slate-500">Educational information, not medical advice</p>
             </div>
           </div>
@@ -139,15 +139,15 @@ export function AIChat() {
                 data-testid={`ai-message-${m.role}-${i}`}
                 className={`max-w-[88%] whitespace-pre-wrap rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed ${
                   m.role === "user"
-                    ? "ml-auto bg-emerald-500/15 text-emerald-50"
-                    : "bg-slate-800/70 text-slate-200"
+                    ? "ml-auto bg-emerald-600/15 text-emerald-900"
+                    : "bg-slate-200/70 text-slate-800"
                 }`}
               >
                 {m.text || (busy && i === messages.length - 1 ? "…" : "")}
               </div>
             ))}
             {error && (
-              <p data-testid="ai-chat-error" className="rounded-xl bg-red-500/10 px-3 py-2 text-xs text-red-300">
+              <p data-testid="ai-chat-error" className="rounded-xl bg-red-500/10 px-3 py-2 text-xs text-red-600">
                 {error}
               </p>
             )}
@@ -158,7 +158,7 @@ export function AIChat() {
                     key={s}
                     data-testid={`ai-suggestion-${s.slice(0, 10).toLowerCase().replace(/\W+/g, "-")}`}
                     onClick={() => send(s)}
-                    className="mb-2 mr-2 rounded-full border border-slate-700 px-3 py-1.5 text-[11px] text-slate-300 transition-colors hover:border-emerald-500/60 hover:text-emerald-300"
+                    className="mb-2 mr-2 rounded-full border border-slate-300 px-3 py-1.5 text-[11px] text-slate-700 transition-colors hover:border-emerald-500/60 hover:text-emerald-700"
                   >
                     {s}
                   </button>
@@ -168,7 +168,7 @@ export function AIChat() {
           </div>
 
           <form
-            className="flex items-center gap-2 border-t border-slate-700/60 px-3 py-3"
+            className="flex items-center gap-2 border-t border-slate-300/60 px-3 py-3"
             onSubmit={(e) => {
               e.preventDefault();
               send();
@@ -179,13 +179,13 @@ export function AIChat() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask about food, water, sound, mind…"
-              className="flex-1 rounded-full border border-slate-700 bg-slate-900/70 px-4 py-2.5 text-[13px] text-slate-100 outline-none placeholder:text-slate-600 focus:ring-2 focus:ring-emerald-400"
+              className="flex-1 rounded-full border border-slate-300 bg-white px-4 py-2.5 text-[13px] text-slate-900 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-emerald-400"
             />
             <button
               data-testid="ai-chat-send"
               type="submit"
               disabled={busy}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-slate-950 disabled:opacity-50"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-600 text-white disabled:opacity-50"
             >
               <Send className="h-4 w-4" />
             </button>

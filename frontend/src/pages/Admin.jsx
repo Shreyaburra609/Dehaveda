@@ -13,7 +13,7 @@ import { ErrorState, Loading, SectionHeading } from "@/components/States";
 import { Seo } from "@/components/Seo";
 
 const COLORS = ["#10B981", "#38BDF8", "#A855F7", "#F59E0B", "#6366F1"];
-const TABS = ["Overview", "Payments", "Users", "Plans", "Food Content", "Messages"];
+const TABS = ["Overview", "Payments", "Users", "Plans", "Food Content", "Messages", "Access"];
 
 export default function Admin() {
   const { user, checking } = useAuth();
@@ -24,6 +24,7 @@ export default function Admin() {
   const [users, setUsers] = useState([]);
   const [plans, setPlans] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [gating, setGating] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [newFood, setNewFood] = useState({
@@ -39,13 +40,15 @@ export default function Admin() {
     setLoading(true);
     setError("");
     try {
-      const [s, c, u, p, m] = await Promise.all([
+      const [s, c, u, p, m, g] = await Promise.all([
         api.get("/admin/stats"),
         api.get("/admin/claims"),
         api.get("/admin/users"),
         api.get("/plans"),
         api.get("/admin/contact"),
+        api.get("/admin/settings"),
       ]);
+      setGating(g.data.premium_gating_enabled);
       setStats(s.data);
       setClaims(c.data.claims);
       setUsers(u.data.users);
@@ -68,6 +71,20 @@ export default function Admin() {
       await api.post(`/admin/claims/${id}/${action}`);
       toast.success(`Payment ${action === "verify" ? "verified — premium activated" : "rejected"}`);
       load();
+    } catch (err) {
+      toast.error(apiError(err));
+    }
+  };
+
+  const saveGating = async (value) => {
+    try {
+      const { data } = await api.put("/admin/settings", { premium_gating_enabled: value });
+      setGating(data.premium_gating_enabled);
+      toast.success(
+        data.premium_gating_enabled
+          ? "Premium gating is ON — premium content now requires a subscription"
+          : "Premium gating is OFF — all content is free for everyone",
+      );
     } catch (err) {
       toast.error(apiError(err));
     }
@@ -124,7 +141,7 @@ export default function Admin() {
               data-testid={`admin-tab-${t.toLowerCase().replace(/\W+/g, "-")}`}
               onClick={() => setTab(t)}
               className={`rounded-full border px-4 py-2 text-xs transition-colors ${
-                tab === t ? "border-sky-500/60 bg-sky-500/12 text-sky-300" : "border-slate-800 text-slate-400 hover:text-slate-200"
+                tab === t ? "border-sky-500/60 bg-sky-500/12 text-sky-700" : "border-slate-200 text-slate-600 hover:text-slate-800"
               }`}
             >
               {t}
@@ -211,7 +228,7 @@ export default function Admin() {
                     ) : (
                       <ul className="space-y-2">
                         {stats.popular_pages.map((p) => (
-                          <li key={p.path} className="flex justify-between text-xs text-slate-400">
+                          <li key={p.path} className="flex justify-between text-xs text-slate-600">
                             <span className="font-data">{p.path}</span>
                             <span>{p.views}</span>
                           </li>
@@ -237,9 +254,9 @@ export default function Admin() {
                           ))}
                         </tr>
                       </thead>
-                      <tbody className="text-slate-300">
+                      <tbody className="text-slate-700">
                         {claims.map((c) => (
-                          <tr key={c.id} data-testid={`claim-row-${c.id}`} className="border-t border-slate-800">
+                          <tr key={c.id} data-testid={`claim-row-${c.id}`} className="border-t border-slate-200">
                             <td className="py-3 pr-4">{c.user_email}</td>
                             <td className="py-3 pr-4">{c.plan_name}</td>
                             <td className="py-3 pr-4">₹{c.amount}</td>
@@ -247,7 +264,7 @@ export default function Admin() {
                             <td className="py-3 pr-4">
                               <span
                                 className={
-                                  c.status === "verified" ? "text-emerald-300" : c.status === "rejected" ? "text-red-300" : "text-amber-300"
+                                  c.status === "verified" ? "text-emerald-700" : c.status === "rejected" ? "text-red-600" : "text-amber-700"
                                 }
                               >
                                 {c.status}
@@ -256,7 +273,7 @@ export default function Admin() {
                             <td className="py-3">
                               {c.status === "pending" && (
                                 <div className="flex gap-2">
-                                  <Button data-testid={`verify-${c.id}`} size="sm" className="h-7 rounded-full bg-emerald-500 px-3 text-slate-950" onClick={() => review(c.id, "verify")}>
+                                  <Button data-testid={`verify-${c.id}`} size="sm" className="h-7 rounded-full bg-emerald-600 px-3 text-white" onClick={() => review(c.id, "verify")}>
                                     <Check className="h-3 w-3" />
                                   </Button>
                                   <Button data-testid={`reject-${c.id}`} size="sm" variant="secondary" className="h-7 rounded-full px-3" onClick={() => review(c.id, "reject")}>
@@ -285,9 +302,9 @@ export default function Admin() {
                         ))}
                       </tr>
                     </thead>
-                    <tbody className="text-slate-300">
+                    <tbody className="text-slate-700">
                       {users.map((u) => (
-                        <tr key={u.id} className="border-t border-slate-800">
+                        <tr key={u.id} className="border-t border-slate-200">
                           <td className="py-3 pr-4">{u.name}</td>
                           <td className="py-3 pr-4">{u.email}</td>
                           <td className="py-3 pr-4">{u.role}</td>
@@ -307,7 +324,7 @@ export default function Admin() {
                   <Panel key={p.code} title={p.name} testid={`admin-plan-${p.code}`}>
                     <p className="text-xs text-slate-500">Code: {p.code} · {p.duration_days} days</p>
                     <div className="mt-4 flex items-end gap-3">
-                      <label className="flex-1 text-xs text-slate-400">
+                      <label className="flex-1 text-xs text-slate-600">
                         Price (₹)
                         <Input
                           data-testid={`plan-price-input-${p.code}`}
@@ -316,12 +333,12 @@ export default function Admin() {
                           onChange={(e) => {
                             p.newPrice = e.target.value;
                           }}
-                          className="mt-2 bg-slate-900/60"
+                          className="mt-2 bg-white"
                         />
                       </label>
                       <Button
                         data-testid={`plan-save-${p.code}`}
-                        className="rounded-full bg-emerald-500 text-slate-950"
+                        className="rounded-full bg-emerald-600 text-white"
                         onClick={() => savePlan(p.code, p.newPrice ?? p.price)}
                       >
                         Save
@@ -329,7 +346,7 @@ export default function Admin() {
                     </div>
                     <ul className="mt-5 space-y-1.5">
                       {p.features.map((f) => (
-                        <li key={f} className="text-xs text-slate-400">• {f}</li>
+                        <li key={f} className="text-xs text-slate-600">• {f}</li>
                       ))}
                     </ul>
                   </Panel>
@@ -351,7 +368,7 @@ export default function Admin() {
                     ["fiber_g", "Fibre (g)", "number"],
                     ["micronutrients", "Micronutrients", "text"],
                   ].map(([key, label, type]) => (
-                    <label key={key} className="text-xs text-slate-400">
+                    <label key={key} className="text-xs text-slate-600">
                       {label}
                       <Input
                         data-testid={`food-input-${key}`}
@@ -360,20 +377,20 @@ export default function Admin() {
                         value={newFood[key]}
                         onChange={(e) => setNewFood((f) => ({ ...f, [key]: e.target.value }))}
                         required={key === "name" || key === "category"}
-                        className="mt-2 bg-slate-900/60"
+                        className="mt-2 bg-white"
                       />
                     </label>
                   ))}
-                  <label className="text-xs text-slate-400 sm:col-span-2">
+                  <label className="text-xs text-slate-600 sm:col-span-2">
                     Note
                     <Input
                       data-testid="food-input-note"
                       value={newFood.note}
                       onChange={(e) => setNewFood((f) => ({ ...f, note: e.target.value }))}
-                      className="mt-2 bg-slate-900/60"
+                      className="mt-2 bg-white"
                     />
                   </label>
-                  <label className="flex items-center gap-2 text-xs text-slate-400">
+                  <label className="flex items-center gap-2 text-xs text-slate-600">
                     <input
                       data-testid="food-input-premium"
                       type="checkbox"
@@ -382,10 +399,37 @@ export default function Admin() {
                     />
                     Premium only
                   </label>
-                  <Button data-testid="food-add-submit" type="submit" className="rounded-full bg-emerald-500 text-slate-950 sm:col-span-3">
+                  <Button data-testid="food-add-submit" type="submit" className="rounded-full bg-emerald-600 text-white sm:col-span-3">
                     <Plus className="mr-1.5 h-4 w-4" /> Add food
                   </Button>
                 </form>
+              </Panel>
+            )}
+
+            {tab === "Access" && (
+              <Panel title="Content access control" testid="admin-access">
+                <p className="text-sm leading-relaxed text-slate-700">
+                  While this switch is <strong>off</strong>, every food entry, water parameter, swara, mind topic
+                  and game is free for all visitors. Turn it <strong>on</strong> once the platform has grown, and
+                  premium content will immediately require an active subscription. Nothing else needs to change.
+                </p>
+                <div className="mt-6 flex flex-wrap items-center gap-4">
+                  <span
+                    data-testid="gating-status"
+                    className={`font-data rounded-full px-4 py-2 text-xs uppercase tracking-wider ${
+                      gating ? "bg-amber-500/10 text-amber-700" : "bg-emerald-500/10 text-emerald-700"
+                    }`}
+                  >
+                    {gating ? "Premium gating ON — subscription required" : "Premium gating OFF — everything free"}
+                  </span>
+                  <Button
+                    data-testid="gating-toggle"
+                    onClick={() => saveGating(!gating)}
+                    className={`rounded-full ${gating ? "bg-emerald-600 text-white hover:bg-emerald-700" : "bg-amber-600 text-white hover:bg-amber-700"}`}
+                  >
+                    {gating ? "Unlock everything (turn gating off)" : "Turn gating on (require subscription)"}
+                  </Button>
+                </div>
               </Panel>
             )}
 
@@ -396,12 +440,12 @@ export default function Admin() {
                 ) : (
                   <ul className="space-y-4">
                     {messages.map((m) => (
-                      <li key={m.id} className="rounded-xl border border-slate-800 p-4">
-                        <p className="text-sm font-semibold text-slate-100">{m.subject}</p>
+                      <li key={m.id} className="rounded-xl border border-slate-200 p-4">
+                        <p className="text-sm font-semibold text-slate-900">{m.subject}</p>
                         <p className="font-data mt-1 text-[10px] text-slate-500">
                           {m.name} · {m.email} · {new Date(m.created_at).toLocaleString()}
                         </p>
-                        <p className="mt-3 text-sm text-slate-400">{m.message}</p>
+                        <p className="mt-3 text-sm text-slate-600">{m.message}</p>
                       </li>
                     ))}
                   </ul>
@@ -418,7 +462,7 @@ export default function Admin() {
 function Metric({ label, value, testid }) {
   return (
     <div className="dv-surface rounded-2xl p-6">
-      <p data-testid={testid} className="font-display text-3xl font-bold text-slate-50">{value}</p>
+      <p data-testid={testid} className="font-display text-3xl font-bold text-slate-900">{value}</p>
       <p className="font-data mt-2 text-[10px] uppercase tracking-[0.18em] text-slate-500">{label}</p>
     </div>
   );

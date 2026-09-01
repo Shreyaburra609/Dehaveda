@@ -1,0 +1,51 @@
+{
+  "summary": "Iteration 2 verification of DEHA VEDA ECOSYSTEM (backend + frontend). Backend: updated the existing pytest suite for the new 'gating OFF by default' behaviour and added two new modules — tests/test_chalisa.py (Chalisa content + TTS audio) and tests/test_gating_switch.py (settings switch, must run with -n 0). Full run: 81 passed, 1 xfailed, 0 failed. Verified GET /api/settings=false, anonymous /api/foods locked_count 0 of 64, /api/games all 5 unlocked, /api/jala 12 types + 10 params full bodies, /api/swara 7 unlocked with role/culture/example, /api/manas 12 topics unlocked, free logged-in user can POST /api/games/score for 'visual' (200). GET /api/swara/chalisa returns 43 verses (3 dohas + 40 chaupais) with Devanagari + transliteration + meanings in en/hi/te/ta/kn, all non-empty and in the correct Unicode script; intro present in all 5 languages. POST /api/swara/chalisa/audio -> /api/tts/<key>.mp3 returns 200 audio/mpeg (~50KB), caching verified (second identical call <1s, same key), invalid verse 404, bad lang/verse_id 422, bad key 400/404, no LLM key leaked in any response. Gating switch toggled ON via admin UI (admin-tab-access, gating-status, gating-toggle) -> anonymous foods locked_count 24/64, games locked ['pattern','visual'], /swara shows swara-locked for Ma, /ahara shows '24 of 64 entries are part of Premium membership.', free-access-banner disappears, free user 403 on premium score; then toggled back OFF via the UI and confirmed everything unlocked. GATING IS LEFT OFF (verified /api/settings = {premium_gating_enabled:false} at the end). Frontend: /swara header image + swara-detail image + 3-slide auto gallery (next/prev/dot/playpause all work, caption changes), 0 broken images anywhere on /swara /ahara /manas /games /jala /about (naturalWidth>0 for every img), chalisa-section with 43 verse blocks, language selector switching intro + every meaning + 'Meaning — <Language>' label for all 5 languages, verse and meaning audio buttons produce POST 200 + GET tts 200 with no chalisa-audio-error banner. Regression: register->auto login, reaction game records score and the dashboard now refreshes live (iteration-1 bug fixed), premium 'visual' game playable anonymously, calorie calculator returns BMR/maintenance/range/BMI/protein, food search 'Apple' works, 9-step Jala journey, 3D brain canvas + 8 region buttons, AI chat streams an on-topic answer, contact form success, mobile 390x844 home pillar cards stack full width with no horizontal overflow and the Chalisa language selector wraps to 2 rows. Zero console errors on every page tested.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "POST /api/swara/chalisa/audio", "issue": "First (uncached) generation of an un-generated verse took 37.2s end-to-end (measured for chaupai-37/ta), slower than the documented 5-25s. Cached calls are <1s. Consider pre-warming the cache for popular verses or showing an explicit long-wait progress state; a client/proxy with a 30s timeout would fail the first call."},
+      {"endpoint": "POST /api/swara/chalisa/audio", "issue": "Endpoint is completely unauthenticated and only IP rate-limited (60/600s) while it spends paid LLM/TTS credits; behind the shared ingress IP the limit is also global. Low risk today (text is a fixed 43-verse corpus so the cache saturates) but worth an auth/stricter budget guard."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Home — pillar cards / section eyebrow accents", "issues": ["Pillar accent colours from lib/api.js are used as small text on white: JALA #38BDF8 gives a 2.14:1 contrast ratio and MANAS/#10B981-style greens ~2.5:1, both below WCAG AA (4.5:1) for body-size text (e.g. 'Water & Water Knowledge', 'Repeat the growing pattern of tiles.'). Darken the text variant of each accent (e.g. sky-700/emerald-700) and keep the bright hue only for icons/borders."]},
+      {"screen": "Games — card thumbnails", "issues": ["All five game cards use abstract glitch/mosaic noise images that do not communicate the game (reaction, memory, digit span, spatial, pattern). Images load fine but read as visual noise next to the polished rest of the page."]},
+      {"screen": "Contact form", "issues": ["Invalid input (1-char name, 'notanemail', 5-char message) shows no inline error text — submission is only blocked by native HTML5 validation, so no [data-testid] error element appears. Add visible field-level messages for consistency with the rest of the app."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/backend/tests/test_chalisa.py",
+    "/app/backend/tests/test_gating_switch.py",
+    "/app/backend/tests/conftest.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Optional: darken pillar accent colours when used as small text (JALA #38BDF8 = 2.14:1 on white fails WCAG AA).",
+    "Optional: replace the five abstract game-card thumbnails with images that represent each game.",
+    "Optional: add inline validation messages to the contact form instead of relying only on native browser validation.",
+    "Optional: consider pre-warming or increasing the client timeout for the first Chalisa TTS generation (measured 37s uncached)."
+  ],
+  "critical_code_review_comments": [
+    "server.py is now 934 lines (was 812) and still mixes auth, content, chalisa/TTS, games, chat, payments, admin — split into routers before adding more.",
+    "gating_enabled() hits Mongo on every gated request (foods/jala/swara/manas/games each call it once per request). Cache the settings doc in-process with a short TTL and invalidate on PUT /api/admin/settings.",
+    "chalisa_audio() does local imports of hashlib / OpenAITextToSpeech inside the handler and blocks the event loop on path.write_bytes; move imports to module scope and write via a thread executor for large files.",
+    "The TTS cache key is derived only from text|voice|model, so /app/backend/audio_cache grows unbounded and is not shared across replicas or preserved across container rebuilds — no size cap or eviction exists.",
+    "rate_limit() is still a process-local defaultdict (noted in iteration 1) and is now also used for the paid TTS endpoint, so the budget guard resets on every restart."
+  ],
+  "updated_files": [
+    "/app/backend/tests/backend_test.py",
+    "/app/backend/tests/test_chalisa.py",
+    "/app/backend/tests/test_gating_switch.py"
+  ],
+  "success_rate": {"backend": "100% (81 passed, 1 xfailed, 0 failed)", "frontend": "100% of tested flows passed; only 3 non-blocking design observations"},
+  "seed_data_creation": "Registered UI test users uitest_1788272430@dvtest.com and uitest_1788272489@dvtest.com (UiTest@2026, free tier); a few test_<hex>@dvtest.com API users; one TEST_ contact message ('TEST_ iteration 2 regression message'); 4 mp3 files in /app/backend/audio_cache from Chalisa TTS tests.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "Admin admin@dehaveda.com / DehaVeda@2026 (works, account is premium). Free UI users: uitest_1788272489@dvtest.com / UiTest@2026.",
+  "context_for_next_testing_agent": "Premium gating is OFF (verified at the end of this run). backend_test.py now asserts the UNLOCKED default; all gating-ON assertions live in /app/backend/tests/test_gating_switch.py which mutates global state — run it with `pytest tests/test_gating_switch.py -n 0` and never in parallel with other modules (it restores OFF in a finally block). Correct testids that differ from the review request: login/register form uses auth-email-input / auth-password-input / auth-name-input / auth-submit-button; games play buttons are game-play-<code> (not play-game-*); calorie inputs are calorie-age/height/weight; AI chat is ai-chat-toggle/ai-chat-input/ai-chat-send/ai-chat-messages; Manas topic cards are manas-topic-<i>; Jala journey steps are journey-step-1..9 with journey-detail. AutoCarousel renders all slides stacked with opacity, so assert the -caption text changing (not img src) when testing next/prev.",
+  "rca_of_the_issue": "No functional defects found this iteration. The uncached Chalisa TTS latency (37s) comes from generating a full verse meaning through OpenAI tts-1 inside the request; only the first request per (text, voice) pair pays it because the mp3 is then written to /app/backend/audio_cache and served by GET /api/tts/{key}.mp3."
+}

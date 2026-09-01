@@ -21,8 +21,8 @@ export function AutoCarousel({ slides, interval = 5000, testid = "carousel", hei
   if (!slides?.length) return null;
 
   return (
-    <div data-testid={testid} className="relative overflow-hidden rounded-3xl border border-slate-800">
-      <div className={`relative w-full ${heightClass} bg-slate-900`}>
+    <div data-testid={testid} className="relative overflow-hidden rounded-3xl border border-slate-200">
+      <div className={`relative w-full ${heightClass} bg-slate-100`}>
         {slides.map((s, i) => (
           <img
             key={s.url}
@@ -36,7 +36,7 @@ export function AutoCarousel({ slides, interval = 5000, testid = "carousel", hei
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#060910] via-[#060910]/20 to-transparent" />
         <p
           data-testid={`${testid}-caption`}
-          className="absolute bottom-16 left-5 right-5 font-display text-lg font-semibold text-slate-50 sm:bottom-20 sm:text-2xl"
+          className="absolute bottom-16 left-5 right-5 font-display text-lg font-semibold text-white drop-shadow sm:bottom-20 sm:text-2xl"
         >
           {slides[index].caption}
         </p>
@@ -51,7 +51,7 @@ export function AutoCarousel({ slides, interval = 5000, testid = "carousel", hei
               data-testid={`${testid}-dot-${i}`}
               onClick={() => setIndex(i)}
               className={`h-1.5 rounded-full transition-all ${
-                i === index ? "w-7 bg-emerald-400" : "w-2.5 bg-slate-600 hover:bg-slate-400"
+                i === index ? "w-7 bg-emerald-400" : "w-2.5 bg-white/55 hover:bg-white"
               }`}
             />
           ))}
@@ -61,15 +61,14 @@ export function AutoCarousel({ slides, interval = 5000, testid = "carousel", hei
             aria-label={playing ? "Pause carousel" : "Play carousel"}
             data-testid={`${testid}-playpause`}
             onClick={() => setPlaying((p) => !p)}
-            className="rounded-full border border-slate-700 bg-slate-900/80 p-2 text-slate-300 hover:text-emerald-300"
+            className="rounded-full border border-slate-300 bg-white/95 p-2 text-slate-700 hover:text-emerald-700"
           >
-            {playing ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
-          </button>
+            {playing ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}          </button>
           <button
             aria-label="Previous slide"
             data-testid={`${testid}-prev`}
             onClick={() => go(-1)}
-            className="rounded-full border border-slate-700 bg-slate-900/80 p-2 text-slate-300 hover:text-emerald-300"
+            className="rounded-full border border-slate-300 bg-white/95 p-2 text-slate-700 hover:text-emerald-700"
           >
             <ChevronLeft className="h-3.5 w-3.5" />
           </button>
@@ -77,7 +76,7 @@ export function AutoCarousel({ slides, interval = 5000, testid = "carousel", hei
             aria-label="Next slide"
             data-testid={`${testid}-next`}
             onClick={() => go(1)}
-            className="rounded-full border border-slate-700 bg-slate-900/80 p-2 text-slate-300 hover:text-emerald-300"
+            className="rounded-full border border-slate-300 bg-white/95 p-2 text-slate-700 hover:text-emerald-700"
           >
             <ChevronRight className="h-3.5 w-3.5" />
           </button>

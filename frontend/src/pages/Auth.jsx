@@ -36,25 +36,25 @@ export default function Auth({ mode }) {
       />
       <section className="dv-aurora flex min-h-[80vh] items-center justify-center px-4 py-16">
         <div className="dv-glass w-full max-w-md rounded-3xl p-8 sm:p-10">
-          <p className="font-data mb-3 text-[10px] uppercase tracking-[0.28em] text-emerald-400">
+          <p className="font-data mb-3 text-[10px] uppercase tracking-[0.28em] text-emerald-600">
             {isLogin ? "Welcome back" : "Join the ecosystem"}
           </p>
-          <h1 className="font-display text-3xl font-bold tracking-tight text-slate-50">
+          <h1 className="font-display text-3xl font-bold tracking-tight text-slate-900">
             {isLogin ? "Log in" : "Create your free account"}
           </h1>
 
           <form onSubmit={submit} data-testid="auth-form" className="mt-8 space-y-4">
             {!isLogin && (
-              <label className="block text-xs text-slate-400">
+              <label className="block text-xs text-slate-600">
                 Full name
-                <Input data-testid="auth-name-input" value={form.name} onChange={set("name")} required minLength={2} className="mt-2 bg-slate-900/60" />
+                <Input data-testid="auth-name-input" value={form.name} onChange={set("name")} required minLength={2} className="mt-2 bg-white" />
               </label>
             )}
-            <label className="block text-xs text-slate-400">
+            <label className="block text-xs text-slate-600">
               Email
-              <Input data-testid="auth-email-input" type="email" value={form.email} onChange={set("email")} required className="mt-2 bg-slate-900/60" />
+              <Input data-testid="auth-email-input" type="email" value={form.email} onChange={set("email")} required className="mt-2 bg-white" />
             </label>
-            <label className="block text-xs text-slate-400">
+            <label className="block text-xs text-slate-600">
               Password
               <Input
                 data-testid="auth-password-input"
@@ -63,18 +63,18 @@ export default function Auth({ mode }) {
                 onChange={set("password")}
                 required
                 minLength={isLogin ? 1 : 8}
-                className="mt-2 bg-slate-900/60"
+                className="mt-2 bg-white"
               />
-              {!isLogin && <span className="mt-1.5 block text-[10px] text-slate-600">At least 8 characters.</span>}
+              {!isLogin && <span className="mt-1.5 block text-[10px] text-slate-400">At least 8 characters.</span>}
             </label>
 
             {error && (
-              <p data-testid="auth-error" className="rounded-xl bg-red-500/10 px-4 py-3 text-xs text-red-300">
+              <p data-testid="auth-error" className="rounded-xl bg-red-500/10 px-4 py-3 text-xs text-red-600">
                 {error}
               </p>
             )}
 
-            <Button data-testid="auth-submit-button" type="submit" disabled={busy} className="w-full rounded-full bg-emerald-500 text-slate-950 hover:bg-emerald-400">
+            <Button data-testid="auth-submit-button" type="submit" disabled={busy} className="w-full rounded-full bg-emerald-600 text-white hover:bg-emerald-700">
               {busy ? "Please wait…" : isLogin ? "Log in" : "Create account"}
             </Button>
           </form>
@@ -84,7 +84,7 @@ export default function Auth({ mode }) {
             <Link
               data-testid="auth-switch-link"
               to={isLogin ? "/register" : "/login"}
-              className="text-emerald-300 underline"
+              className="text-emerald-700 underline"
             >
               {isLogin ? "Create an account" : "Log in"}
             </Link>

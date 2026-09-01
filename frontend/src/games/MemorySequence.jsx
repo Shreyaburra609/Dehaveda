@@ -77,7 +77,7 @@ export default function MemorySequence() {
             data-testid={`sequence-tile-${t.id}`}
             onClick={() => press(t.id)}
             disabled={phase !== "input"}
-            className="h-28 rounded-2xl border border-slate-800 transition-all duration-150 disabled:cursor-not-allowed sm:h-32"
+            className="h-28 rounded-2xl border border-slate-200 transition-all duration-150 disabled:cursor-not-allowed sm:h-32"
             style={{
               background: flash === t.id ? t.color : `${t.color}22`,
               boxShadow: flash === t.id ? `0 0 34px ${t.color}88` : "none",
@@ -94,7 +94,7 @@ export default function MemorySequence() {
       </div>
 
       <div className="mt-4 flex items-center gap-3">
-        <Button data-testid="sequence-start" onClick={start} className="rounded-full bg-emerald-500 text-slate-950 hover:bg-emerald-400">
+        <Button data-testid="sequence-start" onClick={start} className="rounded-full bg-emerald-600 text-white hover:bg-emerald-700">
           {phase === "idle" ? "Start" : "Restart"}
         </Button>
         <p className="text-xs text-slate-500">

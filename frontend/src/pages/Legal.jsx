@@ -54,14 +54,14 @@ export default function Legal({ doc }) {
         <div className="mt-10 space-y-8">
           {d.body.map(([heading, text]) => (
             <div key={heading}>
-              <h2 className="font-display text-xl font-semibold text-slate-100">{heading}</h2>
-              <p className="mt-3 text-sm leading-relaxed text-slate-400">{text}</p>
+              <h2 className="font-display text-xl font-semibold text-slate-900">{heading}</h2>
+              <p className="mt-3 text-sm leading-relaxed text-slate-600">{text}</p>
             </div>
           ))}
         </div>
         {doc === "notfound" && (
           <Link to="/">
-            <Button data-testid="notfound-home-button" className="mt-10 rounded-full bg-emerald-500 text-slate-950">
+            <Button data-testid="notfound-home-button" className="mt-10 rounded-full bg-emerald-600 text-white">
               Back to homepage
             </Button>
           </Link>

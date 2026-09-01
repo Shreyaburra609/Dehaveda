@@ -4,16 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 export const Loading = ({ label = "Loading…", testid = "loading-state" }) => (
-  <div data-testid={testid} className="flex items-center gap-3 py-14 text-slate-400">
-    <Loader2 className="h-5 w-5 animate-spin text-emerald-400" />
+  <div data-testid={testid} className="flex items-center gap-3 py-14 text-slate-600">
+    <Loader2 className="h-5 w-5 animate-spin text-emerald-600" />
     <span className="text-sm">{label}</span>
   </div>
 );
 
 export const ErrorState = ({ message, onRetry, testid = "error-state" }) => (
   <div data-testid={testid} className="dv-surface rounded-2xl p-8 text-center">
-    <AlertTriangle className="mx-auto mb-3 h-7 w-7 text-amber-400" />
-    <p className="text-sm text-slate-300">{message}</p>
+    <AlertTriangle className="mx-auto mb-3 h-7 w-7 text-amber-600" />
+    <p className="text-sm text-slate-700">{message}</p>
     {onRetry && (
       <Button data-testid="retry-button" onClick={onRetry} variant="secondary" className="mt-5 rounded-full">
         Try again
@@ -25,7 +25,7 @@ export const ErrorState = ({ message, onRetry, testid = "error-state" }) => (
 export const EmptyState = ({ message, testid = "empty-state" }) => (
   <div data-testid={testid} className="dv-surface rounded-2xl p-10 text-center">
     <Inbox className="mx-auto mb-3 h-7 w-7 text-slate-500" />
-    <p className="text-sm text-slate-400">{message}</p>
+    <p className="text-sm text-slate-600">{message}</p>
   </div>
 );
 
@@ -35,12 +35,12 @@ export const PremiumLock = ({ title, testid = "premium-lock" }) => (
     className="dv-surface flex h-full flex-col justify-between rounded-2xl border-dashed p-6"
   >
     <div>
-      <Lock className="mb-3 h-5 w-5 text-amber-400" />
-      <p className="font-display text-xl text-slate-200">{title}</p>
+      <Lock className="mb-3 h-5 w-5 text-amber-600" />
+      <p className="font-display text-xl text-slate-800">{title}</p>
       <p className="mt-2 text-xs text-slate-500">Included in Premium membership.</p>
     </div>
     <Link to="/membership" className="mt-5">
-      <Button data-testid="unlock-premium-button" size="sm" className="w-full rounded-full bg-amber-500 text-slate-950 hover:bg-amber-400">
+      <Button data-testid="unlock-premium-button" size="sm" className="w-full rounded-full bg-amber-600 text-white hover:bg-amber-700">
         Unlock Premium
       </Button>
     </Link>
@@ -86,12 +86,12 @@ export function SectionHeading({ eyebrow, title, subtitle, id }) {
   return (
     <div id={id} className="max-w-3xl">
       {eyebrow && (
-        <p className="font-data mb-3 text-xs uppercase tracking-[0.28em] text-emerald-400">{eyebrow}</p>
+        <p className="font-data mb-3 text-xs uppercase tracking-[0.28em] text-emerald-600">{eyebrow}</p>
       )}
-      <h2 className="font-display text-2xl font-bold tracking-tight text-slate-50 sm:text-3xl lg:text-4xl">
+      <h2 className="font-display text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
         {title}
       </h2>
-      {subtitle && <p className="mt-4 text-sm leading-relaxed text-slate-400 sm:text-base">{subtitle}</p>}
+      {subtitle && <p className="mt-4 text-sm leading-relaxed text-slate-600 sm:text-base">{subtitle}</p>}
     </div>
   );
 }

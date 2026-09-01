@@ -35,7 +35,7 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <div className="min-h-screen bg-[#090d16]">
+        <div className="min-h-screen bg-white">
           <RouteTracker />
           <Navbar />
           <main>

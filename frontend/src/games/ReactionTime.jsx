@@ -41,24 +41,24 @@ export default function ReactionTime() {
   const avg = times.length ? Math.round(times.reduce((a, b) => a + b, 0) / times.length) : null;
 
   const bg =
-    phase === "ready" ? "bg-emerald-500" : phase === "waiting" ? "bg-slate-800" : phase === "early" ? "bg-red-900/70" : "bg-slate-900";
+    phase === "ready" ? "bg-emerald-600" : phase === "waiting" ? "bg-slate-200" : phase === "early" ? "bg-red-100" : "bg-slate-100";
 
   return (
     <div data-testid="game-reaction">
       <button
         data-testid="reaction-area"
         onClick={click}
-        className={`flex h-72 w-full select-none items-center justify-center rounded-3xl border border-slate-800 text-center transition-colors duration-150 ${bg}`}
+        className={`flex h-72 w-full select-none items-center justify-center rounded-3xl border border-slate-200 text-center transition-colors duration-150 ${bg}`}
       >
         <div className="px-6">
-          {phase === "idle" && <p className="font-display text-2xl text-slate-100">Click to begin</p>}
-          {phase === "waiting" && <p className="font-display text-2xl text-slate-400">Wait for green…</p>}
-          {phase === "ready" && <p className="font-display text-3xl font-bold text-slate-950">CLICK NOW</p>}
-          {phase === "early" && <p className="font-display text-2xl text-red-200">Too early. Click to retry.</p>}
+          {phase === "idle" && <p className="font-display text-2xl text-slate-900">Click to begin</p>}
+          {phase === "waiting" && <p className="font-display text-2xl text-slate-600">Wait for green…</p>}
+          {phase === "ready" && <p className="font-display text-3xl font-bold text-white">CLICK NOW</p>}
+          {phase === "early" && <p className="font-display text-2xl text-red-700">Too early. Click to retry.</p>}
           {phase === "result" && (
             <>
-              <p data-testid="reaction-result" className="font-display text-5xl font-bold text-emerald-300">{last} ms</p>
-              <p className="mt-2 text-xs text-slate-400">Click to try again</p>
+              <p data-testid="reaction-result" className="font-display text-5xl font-bold text-emerald-700">{last} ms</p>
+              <p className="mt-2 text-xs text-slate-600">Click to try again</p>
             </>
           )}
         </div>
@@ -72,7 +72,7 @@ export default function ReactionTime() {
       <Button
         data-testid="reaction-reset"
         variant="ghost"
-        className="mt-4 rounded-full text-slate-400"
+        className="mt-4 rounded-full text-slate-600"
         onClick={() => {
           setTimes([]);
           setLast(null);
@@ -89,7 +89,7 @@ export function Stat({ label, value, testid }) {
   return (
     <div className="dv-surface rounded-xl px-4 py-3">
       <p className="font-data text-[9px] uppercase tracking-[0.16em] text-slate-500">{label}</p>
-      <p data-testid={testid} className="font-data mt-1 text-lg text-slate-100">{value}</p>
+      <p data-testid={testid} className="font-data mt-1 text-lg text-slate-900">{value}</p>
     </div>
   );
 }

@@ -20,14 +20,16 @@ export default function Membership() {
   const [reference, setReference] = useState("");
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState(false);
+  const [gating, setGating] = useState(true);
 
   const load = async () => {
     setLoading(true);
     setError("");
     try {
-      const { data } = await api.get("/plans");
+      const [{ data }, { data: settings }] = await Promise.all([api.get("/plans"), api.get("/settings")]);
       setPlans(data.plans);
       setUpi(data.upi_id);
+      setGating(settings.premium_gating_enabled);
       if (user) {
         const s = await api.get("/membership/status");
         setStatus(s.data);
@@ -77,13 +79,13 @@ export default function Membership() {
     <>
       <Seo title="Membership" description="Free membership and a configurable one-month premium plan. Pay by scanning the QR code; premium activates after manual verification." path="/membership" />
 
-      <header className="dv-aurora border-b border-slate-800/70">
+      <header className="dv-aurora border-b border-slate-200">
         <div className="mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-20">
-          <p className="font-data mb-4 text-[11px] uppercase tracking-[0.3em] text-amber-400">Membership</p>
-          <h1 className="font-display text-4xl font-extrabold tracking-tight text-slate-50 sm:text-5xl lg:text-6xl">
+          <p className="font-data mb-4 text-[11px] uppercase tracking-[0.3em] text-amber-600">Membership</p>
+          <h1 className="font-display text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
             Free to explore, premium for depth
           </h1>
-          <p className="mt-6 max-w-2xl text-sm leading-relaxed text-slate-400 sm:text-base">
+          <p className="mt-6 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
             Plan names, prices and features are stored in the database, so they can be changed from the admin
             dashboard without touching the code.
           </p>
@@ -96,21 +98,28 @@ export default function Membership() {
 
         {!loading && !error && (
           <>
+            {!gating && (
+              <p data-testid="free-access-banner" className="mb-8 rounded-2xl border border-emerald-500/25 bg-emerald-500/5 px-5 py-4 text-sm text-emerald-800">
+                Launch offer: every pillar, every food entry, every water parameter, all seven swaras and all five
+                games are <strong>free for everyone right now</strong>. Premium access will be required once the
+                platform grows — subscribing today supports that work and locks in your membership early.
+              </p>
+            )}
             {user && (
               <div data-testid="membership-status" className="dv-surface mb-10 flex flex-wrap items-center justify-between gap-4 rounded-2xl p-6">
                 <div>
                   <p className="font-data text-[10px] uppercase tracking-[0.2em] text-slate-500">Your status</p>
-                  <p className="font-display mt-2 text-2xl text-slate-50">
+                  <p className="font-display mt-2 text-2xl text-slate-900">
                     {user.premium ? "Premium active" : "Free membership"}
                   </p>
                   {user.premium_until && (
-                    <p className="font-data mt-1 text-xs text-emerald-300">
+                    <p className="font-data mt-1 text-xs text-emerald-700">
                       Valid until {new Date(user.premium_until).toLocaleDateString()}
                     </p>
                   )}
                 </div>
                 {pending && (
-                  <p data-testid="pending-claim-notice" className="max-w-sm rounded-xl border border-amber-500/30 bg-amber-500/8 px-4 py-3 text-xs text-amber-200">
+                  <p data-testid="pending-claim-notice" className="max-w-sm rounded-xl border border-amber-500/30 bg-amber-600/8 px-4 py-3 text-xs text-amber-800">
                     Payment reference <span className="font-data">{pending.reference}</span> is awaiting admin
                     verification. Premium activates once it is approved.
                   </p>
@@ -124,17 +133,17 @@ export default function Membership() {
                   key={plan.code}
                   data-testid={`plan-card-${plan.code}`}
                   className={`rounded-3xl border p-8 ${
-                    plan.code === "free" ? "border-slate-800 bg-[#0f1626]" : "border-amber-500/35 bg-amber-500/5"
+                    plan.code === "free" ? "border-slate-200 bg-white" : "border-amber-500/35 bg-amber-600/5"
                   }`}
                 >
                   <div className="flex items-start justify-between">
                     <div>
-                      <h2 className="font-display text-2xl font-bold text-slate-50">{plan.name}</h2>
-                      <p className="mt-1 text-xs text-slate-400">{plan.tagline}</p>
+                      <h2 className="font-display text-2xl font-bold text-slate-900">{plan.name}</h2>
+                      <p className="mt-1 text-xs text-slate-600">{plan.tagline}</p>
                     </div>
-                    {plan.code !== "free" && <Crown className="h-5 w-5 text-amber-400" />}
+                    {plan.code !== "free" && <Crown className="h-5 w-5 text-amber-600" />}
                   </div>
-                  <p className="font-display mt-6 text-4xl font-bold text-emerald-300" data-testid={`plan-price-${plan.code}`}>
+                  <p className="font-display mt-6 text-4xl font-bold text-emerald-700" data-testid={`plan-price-${plan.code}`}>
                     {plan.price === 0 ? "Free" : `₹${plan.price}`}
                     {plan.duration_days ? (
                       <span className="font-data ml-2 text-xs text-slate-500">/ {plan.duration_days} days</span>
@@ -142,8 +151,8 @@ export default function Membership() {
                   </p>
                   <ul className="mt-7 space-y-3">
                     {plan.features.map((f) => (
-                      <li key={f} className="flex gap-2.5 text-sm text-slate-300">
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
+                      <li key={f} className="flex gap-2.5 text-sm text-slate-700">
+                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
                         {f}
                       </li>
                     ))}
@@ -158,7 +167,7 @@ export default function Membership() {
                     )
                   ) : (
                     <a href="#qr">
-                      <Button data-testid="plan-premium-cta" className="mt-8 w-full rounded-full bg-amber-500 text-slate-950 hover:bg-amber-400">
+                      <Button data-testid="plan-premium-cta" className="mt-8 w-full rounded-full bg-amber-600 text-white hover:bg-amber-700">
                         Subscribe — scan to pay
                       </Button>
                     </a>
@@ -179,20 +188,20 @@ export default function Membership() {
                       alt="Payment QR code for Deha Veda Ecosystem premium membership"
                       className="mx-auto h-64 w-64 rounded-2xl bg-white object-contain p-3"
                     />
-                    <p className="mt-6 text-sm font-semibold text-slate-100">
+                    <p className="mt-6 text-sm font-semibold text-slate-900">
                       Scan the QR code using your preferred payment app.
                     </p>
                     {upi && <p className="font-data mt-2 text-xs text-slate-500">UPI ID: {upi}</p>}
                     {premiumPlan && (
-                      <p className="font-data mt-1 text-xs text-emerald-300">
+                      <p className="font-data mt-1 text-xs text-emerald-700">
                         Amount: ₹{premiumPlan.price} for {premiumPlan.duration_days} days
                       </p>
                     )}
-                    <p className="mt-5 flex gap-2 text-left text-[11px] leading-relaxed text-amber-300/85">
+                    <p className="mt-5 flex gap-2 text-left text-[11px] leading-relaxed text-amber-700">
                       <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                       <span>
                         This image is a placeholder. Replace the file
-                        <span className="font-data block break-all text-amber-200">frontend/public/payment-qr.png</span>
+                        <span className="font-data block break-all text-amber-800">frontend/public/payment-qr.png</span>
                         with your real QR code, and set PAYMENT_UPI_ID in the backend environment.
                       </span>
                     </p>
@@ -201,15 +210,15 @@ export default function Membership() {
 
                 <div className="lg:col-span-7">
                   <form onSubmit={submitClaim} data-testid="claim-form" className="dv-surface rounded-3xl p-8">
-                    <QrCode className="mb-5 h-5 w-5 text-amber-400" />
-                    <h3 className="font-display text-xl font-semibold text-slate-50">
+                    <QrCode className="mb-5 h-5 w-5 text-amber-600" />
+                    <h3 className="font-display text-xl font-semibold text-slate-900">
                       After paying, submit your reference
                     </h3>
-                    <p className="mt-3 text-sm leading-relaxed text-slate-400">
+                    <p className="mt-3 text-sm leading-relaxed text-slate-600">
                       Enter the transaction or UTR number from your payment app. An administrator verifies it before
                       premium is activated — clicking a button alone never grants premium access.
                     </p>
-                    <label className="mt-6 block text-xs text-slate-400">
+                    <label className="mt-6 block text-xs text-slate-600">
                       Transaction / UTR reference
                       <Input
                         data-testid="claim-reference-input"
@@ -218,29 +227,29 @@ export default function Membership() {
                         placeholder="e.g. 402312345678"
                         required
                         minLength={4}
-                        className="mt-2 bg-slate-900/60"
+                        className="mt-2 bg-white"
                       />
                     </label>
-                    <label className="mt-4 block text-xs text-slate-400">
+                    <label className="mt-4 block text-xs text-slate-600">
                       Note (optional)
                       <Input
                         data-testid="claim-note-input"
                         value={note}
                         onChange={(e) => setNote(e.target.value)}
                         placeholder="Payment app used, time of payment…"
-                        className="mt-2 bg-slate-900/60"
+                        className="mt-2 bg-white"
                       />
                     </label>
                     <Button
                       data-testid="claim-submit-button"
                       type="submit"
                       disabled={busy || !!pending}
-                      className="mt-6 w-full rounded-full bg-emerald-500 text-slate-950 hover:bg-emerald-400"
+                      className="mt-6 w-full rounded-full bg-emerald-600 text-white hover:bg-emerald-700"
                     >
                       {!user ? "Log in to submit" : pending ? "Awaiting verification" : busy ? "Submitting…" : "Submit for verification"}
                     </Button>
                     <p className="mt-5 flex gap-2 text-[11px] leading-relaxed text-slate-500">
-                      <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-400" />
+                      <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600" />
                       We never store card details. Online checkout with a payment provider such as Stripe or Razorpay
                       can be enabled by adding the provider keys to the backend environment.
                     </p>

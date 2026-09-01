@@ -95,7 +95,7 @@ export default function PatternRecognition() {
     <div data-testid="game-pattern">
       <div className="dv-surface rounded-3xl p-8 text-center">
         <p className="font-data text-[10px] uppercase tracking-[0.2em] text-slate-500">{puzzle?.hint}</p>
-        <p data-testid="pattern-prompt" className="font-data mt-5 text-2xl text-slate-100 sm:text-3xl">
+        <p data-testid="pattern-prompt" className="font-data mt-5 text-2xl text-slate-900 sm:text-3xl">
           {puzzle?.prompt}
         </p>
         <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -104,7 +104,7 @@ export default function PatternRecognition() {
               key={o}
               data-testid={`pattern-option-${o}`}
               onClick={() => answer(o)}
-              className="font-data rounded-xl border border-slate-700 py-4 text-lg text-slate-100 transition-colors hover:border-indigo-400/70 hover:bg-indigo-500/10"
+              className="font-data rounded-xl border border-slate-300 py-4 text-lg text-slate-900 transition-colors hover:border-indigo-400/70 hover:bg-indigo-600/10"
             >
               {o}
             </button>
@@ -113,7 +113,7 @@ export default function PatternRecognition() {
         {feedback && (
           <p
             data-testid="pattern-feedback"
-            className={`mt-6 text-sm ${feedback === "correct" ? "text-emerald-300" : "text-red-300"}`}
+            className={`mt-6 text-sm ${feedback === "correct" ? "text-emerald-700" : "text-red-600"}`}
           >
             {feedback === "correct" ? "Correct — next level." : `Not that one. The answer was ${puzzle.answer}.`}
           </p>
@@ -129,7 +129,7 @@ export default function PatternRecognition() {
       <Button
         data-testid="pattern-reset"
         variant="ghost"
-        className="mt-4 rounded-full text-slate-400"
+        className="mt-4 rounded-full text-slate-600"
         onClick={() => {
           setLevel(1);
           setCorrect(0);

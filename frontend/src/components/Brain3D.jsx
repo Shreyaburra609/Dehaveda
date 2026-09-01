@@ -108,7 +108,7 @@ export function Brain3D({ regions, active, onSelect }) {
         className="dv-surface flex h-[380px] flex-col items-center justify-center rounded-3xl p-8 text-center"
       >
         <Move3d className="mb-3 h-7 w-7 text-slate-500" />
-        <p className="text-sm text-slate-400">
+        <p className="text-sm text-slate-600">
           Your device or browser does not support WebGL, so the 3D brain model cannot be displayed. All region
           information is still available in the list below.
         </p>
@@ -120,7 +120,7 @@ export function Brain3D({ regions, active, onSelect }) {
     <div className="relative">
       <div
         data-testid="brain-3d-canvas"
-        className="h-[380px] touch-none overflow-hidden rounded-3xl border border-slate-800 bg-gradient-to-b from-[#0d1424] to-[#070a12] sm:h-[520px]"
+        className="h-[380px] touch-none overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-b from-slate-100 to-white sm:h-[520px]"
         onPointerDown={(e) => {
           drag.current = { x: e.clientX, y: e.clientY, rx: rotation.current.x, ry: rotation.current.y };
         }}
@@ -157,7 +157,7 @@ export function Brain3D({ regions, active, onSelect }) {
           data-testid="brain-zoom-in"
           aria-label="Zoom in"
           onClick={() => setZoom(zoom.current + 0.2)}
-          className="rounded-full border border-slate-700 bg-slate-900/85 p-2.5 text-slate-300 hover:text-emerald-300"
+          className="rounded-full border border-slate-300 bg-white/95 p-2.5 text-slate-700 hover:text-emerald-700"
         >
           <ZoomIn className="h-4 w-4" />
         </button>
@@ -165,7 +165,7 @@ export function Brain3D({ regions, active, onSelect }) {
           data-testid="brain-zoom-out"
           aria-label="Zoom out"
           onClick={() => setZoom(zoom.current - 0.2)}
-          className="rounded-full border border-slate-700 bg-slate-900/85 p-2.5 text-slate-300 hover:text-emerald-300"
+          className="rounded-full border border-slate-300 bg-white/95 p-2.5 text-slate-700 hover:text-emerald-700"
         >
           <ZoomOut className="h-4 w-4" />
         </button>
@@ -176,7 +176,7 @@ export function Brain3D({ regions, active, onSelect }) {
             rotation.current = { x: 0, y: 0 };
             setZoom(1);
           }}
-          className="rounded-full border border-slate-700 bg-slate-900/85 p-2.5 text-slate-300 hover:text-emerald-300"
+          className="rounded-full border border-slate-300 bg-white/95 p-2.5 text-slate-700 hover:text-emerald-700"
         >
           <RotateCcw className="h-4 w-4" />
         </button>

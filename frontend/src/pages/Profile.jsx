@@ -33,13 +33,13 @@ export default function Profile() {
 
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <div className="dv-surface rounded-2xl p-6">
-            <Crown className={`mb-4 h-5 w-5 ${user.premium ? "text-amber-400" : "text-slate-600"}`} />
-            <p data-testid="profile-membership" className="font-display text-xl text-slate-50">
+            <Crown className={`mb-4 h-5 w-5 ${user.premium ? "text-amber-600" : "text-slate-400"}`} />
+            <p data-testid="profile-membership" className="font-display text-xl text-slate-900">
               {user.premium ? "Premium" : "Free"}
             </p>
             <p className="font-data mt-2 text-[10px] uppercase tracking-[0.16em] text-slate-500">Membership</p>
             {user.premium_until && (
-              <p className="font-data mt-2 text-xs text-emerald-300">
+              <p className="font-data mt-2 text-xs text-emerald-700">
                 Until {new Date(user.premium_until).toLocaleDateString()}
               </p>
             )}
@@ -62,11 +62,11 @@ export default function Profile() {
               <ul data-testid="profile-claims" className="space-y-2.5">
                 {claims.map((c) => (
                   <li key={c.id} className="flex items-center justify-between text-xs">
-                    <span className="font-data text-slate-400">{c.reference}</span>
+                    <span className="font-data text-slate-600">{c.reference}</span>
                     <span className="text-slate-500">₹{c.amount}</span>
                     <span
                       className={
-                        c.status === "verified" ? "text-emerald-300" : c.status === "rejected" ? "text-red-300" : "text-amber-300"
+                        c.status === "verified" ? "text-emerald-700" : c.status === "rejected" ? "text-red-600" : "text-amber-700"
                       }
                     >
                       {c.status}
@@ -82,13 +82,13 @@ export default function Profile() {
               <Link to="/membership"><Button size="sm" variant="secondary" className="rounded-full" data-testid="profile-membership-link">Membership</Button></Link>
               <Link to="/games"><Button size="sm" variant="secondary" className="rounded-full" data-testid="profile-games-link">Games</Button></Link>
               {user.role === "admin" && (
-                <Link to="/admin"><Button size="sm" className="rounded-full bg-sky-500 text-slate-950" data-testid="profile-admin-link">Admin dashboard</Button></Link>
+                <Link to="/admin"><Button size="sm" className="rounded-full bg-sky-600 text-white" data-testid="profile-admin-link">Admin dashboard</Button></Link>
               )}
               <Button
                 size="sm"
                 variant="ghost"
                 data-testid="profile-logout-button"
-                className="rounded-full text-slate-400"
+                className="rounded-full text-slate-600"
                 onClick={async () => {
                   await logout();
                   navigate("/");
@@ -107,7 +107,7 @@ export default function Profile() {
 function Metric({ label, value, testid }) {
   return (
     <div className="dv-surface rounded-2xl p-6">
-      <p data-testid={testid} className="font-display text-3xl font-bold text-slate-50">{value}</p>
+      <p data-testid={testid} className="font-display text-3xl font-bold text-slate-900">{value}</p>
       <p className="font-data mt-2 text-[10px] uppercase tracking-[0.18em] text-slate-500">{label}</p>
     </div>
   );

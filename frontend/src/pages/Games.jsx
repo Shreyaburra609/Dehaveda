@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Lock, Trophy, RotateCcw, Shuffle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { api, apiError } from "@/lib/api";
+import { api, apiError, GALLERIES } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { ErrorState, Loading, SectionHeading } from "@/components/States";
 import { Seo } from "@/components/Seo";
@@ -87,13 +87,13 @@ export default function Games() {
     <>
       <Seo title="Games — Mind Games" description="Five original cognitive games: reaction time, memory sequence, number memory, visual memory and pattern recognition, with a personal score dashboard." path="/games" />
 
-      <header className="dv-aurora border-b border-slate-800/70">
+      <header className="dv-aurora border-b border-slate-200">
         <div className="mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-20">
           <p className="font-data mb-4 text-[11px] uppercase tracking-[0.3em] text-indigo-400">05 — Games</p>
-          <h1 className="font-display text-4xl font-extrabold tracking-tight text-slate-50 sm:text-5xl lg:text-6xl">
+          <h1 className="font-display text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
             Mind Games
           </h1>
-          <p className="mt-6 max-w-2xl text-sm leading-relaxed text-slate-400 sm:text-base">
+          <p className="mt-6 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
             Five original games for reaction speed, sequential memory, digit span, spatial memory and pattern
             reasoning. They all work with touch. Scores save to your account when you are logged in, and to this
             browser when you are not.
@@ -108,15 +108,22 @@ export default function Games() {
         {!loading && data && (
           <>
             <div data-testid="games-grid" className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {data.games.map((g) => (
+              {data.games.map((g, gi) => (
                 <div
                   key={g.code}
                   data-testid={`game-card-${g.code}`}
-                  className={`dv-surface flex flex-col rounded-2xl p-6 ${active?.code === g.code ? "border-indigo-500/50" : ""}`}
+                  className={`dv-surface flex flex-col overflow-hidden rounded-2xl ${active?.code === g.code ? "border-indigo-500/50" : ""}`}
                 >
-                  <h3 className="font-display text-xl font-semibold text-slate-50">{g.name}</h3>
-                  <p className="mt-1.5 text-xs text-indigo-300">{g.tagline}</p>
-                  <p className="mt-4 flex-1 text-sm leading-relaxed text-slate-400">{g.description}</p>
+                  <img
+                    src={GALLERIES.games[gi % GALLERIES.games.length]}
+                    alt={`${g.name} game illustration`}
+                    loading="lazy"
+                    className="h-32 w-full border-b border-slate-200 object-cover"
+                  />
+                  <div className="flex flex-1 flex-col p-6">
+                  <h3 className="font-display text-xl font-semibold text-slate-900">{g.name}</h3>
+                  <p className="mt-1.5 text-xs text-indigo-600">{g.tagline}</p>
+                  <p className="mt-4 flex-1 text-sm leading-relaxed text-slate-600">{g.description}</p>
                   {g.locked ? (
                     <Link to="/membership" className="mt-5">
                       <Button data-testid={`game-locked-${g.code}`} size="sm" variant="secondary" className="w-full rounded-full">
@@ -131,11 +138,12 @@ export default function Games() {
                         setActive(g);
                         setTimeout(() => document.getElementById("play-area")?.scrollIntoView({ behavior: "smooth" }), 60);
                       }}
-                      className="mt-5 w-full rounded-full bg-indigo-500 text-slate-50 hover:bg-indigo-400"
+                      className="mt-5 w-full rounded-full bg-indigo-600 text-white hover:bg-indigo-700"
                     >
                       Play
                     </Button>
                   )}
+                  </div>
                 </div>
               ))}
             </div>
@@ -144,7 +152,7 @@ export default function Games() {
               {Active ? (
                 <>
                   <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-                    <h2 className="font-display text-2xl font-bold text-slate-50">{active.name}</h2>
+                    <h2 className="font-display text-2xl font-bold text-slate-900">{active.name}</h2>
                     <div className="flex flex-wrap gap-2">
                       <Button
                         data-testid="play-again-button"
@@ -163,7 +171,7 @@ export default function Games() {
                         data-testid="try-another-button"
                         size="sm"
                         variant="ghost"
-                        className="rounded-full text-slate-300"
+                        className="rounded-full text-slate-700"
                         onClick={() => {
                           const open = data.games.filter((g) => !g.locked && g.code !== active.code);
                           if (open.length) setActive(open[Math.floor(Math.random() * open.length)]);
@@ -175,7 +183,7 @@ export default function Games() {
                         data-testid="view-scores-button"
                         size="sm"
                         variant="ghost"
-                        className="rounded-full text-slate-300"
+                        className="rounded-full text-slate-700"
                         onClick={() => {
                           setShowScores(true);
                           setTimeout(() => document.getElementById("dashboard")?.scrollIntoView({ behavior: "smooth" }), 60);
@@ -189,7 +197,7 @@ export default function Games() {
                 </>
               ) : (
                 <div className="dv-surface rounded-3xl p-10 text-center">
-                  <p className="font-display text-xl text-slate-300">Choose a game above to start playing.</p>
+                  <p className="font-display text-xl text-slate-700">Choose a game above to start playing.</p>
                 </div>
               )}
             </div>
@@ -197,7 +205,7 @@ export default function Games() {
         )}
       </section>
 
-      <section id="dashboard" className="border-t border-slate-800/70 bg-[#0b1020]">
+      <section id="dashboard" className="border-t border-slate-200 bg-[#F6F5F1]">
         <div className="mx-auto max-w-7xl px-4 py-16 lg:px-8">
           <SectionHeading
             eyebrow="Game Dashboard"
@@ -242,8 +250,8 @@ export default function Games() {
                     <ul data-testid="personal-bests" className="space-y-2.5">
                       {Object.entries(dash.personal_bests).map(([code, b]) => (
                         <li key={code} className="flex items-center justify-between text-sm">
-                          <span className="capitalize text-slate-300">{code}</span>
-                          <span className="font-data text-emerald-300">
+                          <span className="capitalize text-slate-700">{code}</span>
+                          <span className="font-data text-emerald-700">
                             {code === "reaction" ? `${Math.round(b.score)} ms` : `${Math.round(b.score)} pts · L${b.level}`}
                           </span>
                         </li>
@@ -258,10 +266,10 @@ export default function Games() {
                   ) : (
                     <ul data-testid="recent-games" className="space-y-2">
                       {dash.recent.map((r, i) => (
-                        <li key={r.id || i} className="flex items-center justify-between text-xs text-slate-400">
+                        <li key={r.id || i} className="flex items-center justify-between text-xs text-slate-600">
                           <span className="capitalize">{r.game}</span>
                           <span className="font-data">{Math.round(r.score)}</span>
-                          <span className="text-slate-600">{new Date(r.created_at).toLocaleDateString()}</span>
+                          <span className="text-slate-400">{new Date(r.created_at).toLocaleDateString()}</span>
                         </li>
                       ))}
                     </ul>
@@ -270,7 +278,7 @@ export default function Games() {
               </div>
 
               {!user && showScores && (
-                <p className="mt-6 text-xs text-amber-300">
+                <p className="mt-6 text-xs text-amber-700">
                   <Link to="/register" className="underline">Create a free account</Link> to keep these scores permanently.
                 </p>
               )}
@@ -285,7 +293,7 @@ export default function Games() {
 function Metric({ label, value, testid }) {
   return (
     <div className="dv-surface rounded-2xl p-6">
-      <p className="font-display text-3xl font-bold text-slate-50" data-testid={testid}>{value}</p>
+      <p className="font-display text-3xl font-bold text-slate-900" data-testid={testid}>{value}</p>
       <p className="font-data mt-2 text-[10px] uppercase tracking-[0.18em] text-slate-500">{label}</p>
     </div>
   );

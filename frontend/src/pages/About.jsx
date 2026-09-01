@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { PILLARS } from "@/lib/api";
+import { PILLARS, GALLERIES } from "@/lib/api";
+import { AutoCarousel } from "@/components/AutoCarousel";
 import { SectionHeading, Reveal } from "@/components/States";
 import { Seo } from "@/components/Seo";
 
@@ -8,17 +9,28 @@ export default function About() {
     <>
       <Seo title="About" description="Deha Veda Ecosystem brings food, water, sound, mind and cognitive games into one educational platform." path="/about" />
 
-      <header className="dv-aurora border-b border-slate-800/70">
+      <header className="dv-aurora border-b border-slate-200">
         <div className="mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-20">
-          <p className="font-data mb-4 text-[11px] uppercase tracking-[0.3em] text-emerald-400">About</p>
-          <h1 className="font-display text-4xl font-extrabold tracking-tight text-slate-50 sm:text-5xl lg:text-6xl">
+          <p className="font-data mb-4 text-[11px] uppercase tracking-[0.3em] text-emerald-600">About</p>
+          <h1 className="font-display text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
             What is Deha Veda Ecosystem?
           </h1>
         </div>
       </header>
 
       <section className="mx-auto max-w-3xl px-4 py-16 lg:px-8">
-        <div className="space-y-6 text-sm leading-relaxed text-slate-300 sm:text-base">
+        <div className="mb-12 grid grid-cols-3 gap-3">
+          {[GALLERIES.ahara[0], GALLERIES.swara[0], GALLERIES.manas[0]].map((g) => (
+            <img
+              key={g.url}
+              src={g.url}
+              alt={g.alt}
+              loading="lazy"
+              className="h-32 w-full rounded-2xl border border-slate-200 object-cover shadow-sm sm:h-40"
+            />
+          ))}
+        </div>
+        <div className="space-y-6 text-sm leading-relaxed text-slate-700 sm:text-base">
           <p>
             Deha Veda Ecosystem is an educational platform. It brings together five subjects that shape daily
             wellbeing — food, water, sound, mind and cognitive training — and presents each one as something you
@@ -44,20 +56,19 @@ export default function About() {
 
         <div className="mt-14">
           <SectionHeading eyebrow="The Ecosystem" title="Five pillars, one platform" />
-          <div className="mt-8 space-y-4">
-            {PILLARS.map((p, i) => (
+          <div className="mt-8 space-y-4">            {PILLARS.map((p, i) => (
               <Reveal key={p.code} delay={i * 60}>
                 <Link
                   to={p.path}
                   data-testid={`about-pillar-${p.code}`}
                   className="dv-surface flex items-start gap-5 rounded-2xl p-6 transition-colors hover:border-emerald-500/40"
                 >
-                  <span className="font-data text-xs" style={{ color: p.accent }}>{p.index}</span>
+                  <span className="font-data text-xs" style={{ color: p.accentText }}>{p.index}</span>
                   <div>
-                    <p className="font-display text-xl font-semibold text-slate-50">
-                      {p.name} <span className="text-sm text-slate-400">— {p.subtitle}</span>
+                    <p className="font-display text-xl font-semibold text-slate-900">
+                      {p.name} <span className="text-sm text-slate-600">— {p.subtitle}</span>
                     </p>
-                    <p className="mt-2 text-sm text-slate-400">{p.blurb}</p>
+                    <p className="mt-2 text-sm text-slate-600">{p.blurb}</p>
                   </div>
                 </Link>
               </Reveal>
