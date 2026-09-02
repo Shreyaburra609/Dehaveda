@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Search, Flame, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { api, apiError, GALLERIES } from "@/lib/api";
+import { api, apiError, GALLERIES, foodImage } from "@/lib/api";
 import { AutoCarousel } from "@/components/AutoCarousel";
 import { ErrorState, Loading, EmptyState, PremiumLock, SectionHeading, Reveal } from "@/components/States";
 import { Seo } from "@/components/Seo";
@@ -260,7 +260,22 @@ export default function Ahara() {
                     <PremiumLock key={f.id} title={f.name} testid={`food-locked-${f.id}`} />
                   ) : (
                     <Reveal key={f.id} delay={Math.min(i, 8) * 40}>
-                      <article data-testid={`food-card-${f.name.toLowerCase().replace(/\W+/g, "-")}`} className="dv-surface h-full rounded-2xl p-6">
+                      <article data-testid={`food-card-${f.name.toLowerCase().replace(/\W+/g, "-")}`} className="dv-surface h-full overflow-hidden rounded-2xl">
+                        <div className="relative h-36 overflow-hidden border-b border-slate-200">
+                          <img
+                            src={foodImage(f.category)}
+                            alt={`${f.category} foods including ${f.name}`}
+                            loading="lazy"
+                            className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+                          />
+                          <span
+                            data-testid={`food-calories-${f.name.toLowerCase().replace(/\W+/g, "-")}`}
+                            className="font-data absolute right-3 top-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-emerald-700 shadow"
+                          >
+                            {f.calories} kcal
+                          </span>
+                        </div>
+                        <div className="p-6">
                         <div className="flex items-start justify-between gap-3">
                           <div>
                             <h3 className="font-display text-xl font-semibold text-slate-900">{f.name}</h3>
@@ -282,6 +297,7 @@ export default function Ahara() {
                           <p className="mt-4 text-xs text-sky-700">{f.micronutrients}</p>
                         )}
                         {f.note && <p className="mt-3 text-xs leading-relaxed text-slate-600">{f.note}</p>}
+                        </div>
                       </article>
                     </Reveal>
                   ),

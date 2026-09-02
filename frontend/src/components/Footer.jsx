@@ -16,6 +16,7 @@ const COLS = [
     title: "Platform",
     links: [
       ["AI Assistant", "/#ai-assistant"],
+      ["Health Reports", "/health"],
       ["Membership", "/membership"],
       ["About", "/about"],
       ["Contact", "/contact"],

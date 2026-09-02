@@ -11,6 +11,7 @@ const LINKS = [
   { label: "Swara", path: "/swara", testid: "nav-link-swara" },
   { label: "Manas", path: "/manas", testid: "nav-link-manas" },
   { label: "Games", path: "/games", testid: "nav-link-games" },
+  { label: "Health Reports", path: "/health", testid: "nav-link-health" },
   { label: "Membership", path: "/membership", testid: "nav-link-membership" },
   { label: "About", path: "/about", testid: "nav-link-about" },
   { label: "Contact", path: "/contact", testid: "nav-link-contact" },

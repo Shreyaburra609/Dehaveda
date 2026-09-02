@@ -1,0 +1,49 @@
+{
+  "summary": "Iteration 3 full-stack verification of (a) migration of all imagery to locally hosted /images/*.jpg, (b) the three-text devotional module (Hanuman Chalisa 43 / Aditya Hridayam 10 / Vishnu Sahasranama 8) with five-language meanings and per-verse TTS, (c) the ElevenLabs->OpenAI voice-provider fallback with honest UI disclosure, plus regression of gating-OFF free access, auth playbook items and all core flows. Backend: 112 pytest tests passed (31 new in test_texts.py, 76 existing backend_test.py+test_chalisa.py, 5 gating-switch with -n 0) — 0 failures. Frontend: every tested flow passed with zero console errors. No blocking or high-priority defects found.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "CORS (all /api routes)", "issue": "Login/preflight responses come back with 'Access-Control-Allow-Origin: *' together with 'Access-Control-Allow-Credentials: true' (verified with Origin: https://evil.example.com). backend/.env sets an explicit CORS_ORIGINS, so the wildcard appears to be injected by the preview ingress and overrides/duplicates the FastAPI header. Browsers reject credentialed cross-origin requests when ACAO is '*', so cookie-based auth would fail from any other origin; the app itself is unaffected because it sends the Bearer token from localStorage. Worth confirming the deployed (non-preview) config sends the explicit origin."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Games dashboard", "issues": ["'TOTAL SCORE' stays 0 after three Reaction Time rounds (only Number Memory contributes points). Reads as a bug to users even if intentional — consider labelling it 'Memory score' or excluding reaction rounds from the tile."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_texts.py",
+    "/app/backend/tests/test_chalisa.py",
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/iter3_core.xml"
+  ],
+  "action_items": [
+    "Optional: confirm production CORS returns the explicit origin (not '*') alongside allow-credentials.",
+    "Optional: clarify/relabel the 'Total score' tile on the games dashboard."
+  ],
+  "critical_code_review_comments": [
+    "server.py is 1053 lines and now carries the TEXTS registry, TTS provider abstraction and every pillar endpoint; consider splitting texts/TTS into its own router module to stay under the ~700-line guideline.",
+    "synthesize()/voice_for() read ELEVENLABS_API_KEY on every request, so a key added later takes effect without restart — good; note that existing cached mp3 keys already embed the provider so no stale-audio risk.",
+    "TTS cache files in AUDIO_CACHE grow unbounded (one mp3 per verse x language x provider); an eviction or size cap would be prudent."
+  ],
+  "updated_files": ["/app/backend/tests/test_texts.py"],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "seed_data_creation": "Registered free test user qa3_1788274359@dvtest.com / QaPass@2026 (used for games/dashboard testing; 3 Reaction + 1 Number Memory scores recorded). One contact message submitted from qa@dvtest.com. Community member count moved 67 -> 68 via /api/stats/community, confirming registration persistence.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "Admin admin@dehaveda.com / DehaVeda@2026 (verified, bcrypt $2b$12$, role admin). New free user qa3_1788274359@dvtest.com / QaPass@2026.",
+  "verified_this_iteration": {
+    "local_images": "/, /ahara, /jala, /swara, /manas, /games, /about — 0 images with naturalWidth===0, 0 currentSrc containing unsplash.com or pexels.com. GET /images/{swara-musician,hero-landscape,jala-river,jala-well,ahara-board,manas-calm,game-chess}.jpg all 200 image/jpeg >5KB. All 24 /images/*.jpg paths referenced in src+content.py exist on disk with no orphans. Jala gallery (from GET /api/jala) serves /images/jala-*.jpg; next/prev/dots/playpause all cycle and every one of the 5 slides loads at naturalWidth 1400 (off-screen slides are lazy, not broken).",
+    "three_texts": "GET /api/texts -> hanuman-chalisa 43, aditya-hridayam 10, vishnu-sahasranama 8. Detail endpoints return full verse arrays; every verse has Devanagari, Latin transliteration and non-empty meanings in en/hi/te/ta/kn verified to be in the correct Unicode block. /api/texts/does-not-exist -> 404. Legacy GET /api/swara/chalisa still returns the Chalisa payload. UI: text-selector renders the three cards with correct verse counts; clicking each renders 43/10/8 chalisa-verse-<id> blocks (doha-1, aditya-1, sahasranama-1).",
+    "language_selector": "chalisa-lang-en/hi/te/ta/kn switch chalisa-intro, every chalisa-meaning-<id> and the 'MEANING — <LANGUAGE>' label; verified on Aditya Hridayam (Telugu) and Vishnu Sahasranama (Tamil); selection persists across text switches.",
+    "audio": "POST /api/texts/<slug>/audio returns {url, provider:'openai'} for all three slugs; lang 'sa' recitation plus 'te' and 'ta' meanings all yield /api/tts/<key>.mp3 -> 200 audio/mpeg >5KB. Repeat call returns the identical key in <8s (cache hit). Legacy POST /api/swara/chalisa/audio works, including with slug=aditya-hridayam. 404 for unknown verse_id and unknown slug; 422 for invalid lang / short verse_id / missing verse_id; /api/tts/zzzz.mp3 -> 400. UI play button on sahasranama-2 fired /api/texts/vishnu-sahasranama/audio 200 then the mp3 200 with no chalisa-audio-error.",
+    "voice_provider_fallback": "ELEVENLABS_API_KEY empty -> /api/texts and /api/texts/{slug} report voice_provider 'openai', native_voices false; audio_notice mentions ElevenLabs. UI voice-notice shows the amber disclosure. No 'sk-', EMERGENT_LLM_KEY or ELEVENLABS string in any page source or API payload.",
+    "gating_regression": "/api/settings premium_gating_enabled false; anonymous /api/foods locked_count 0 (64 items); 7 swaras, 12 water types, 10 parameters, 12 manas topics, 5 games all locked=0; /membership shows free-access-banner; admin Access tab shows 'PREMIUM GATING OFF — EVERYTHING FREE' and gating left OFF.",
+    "core_flows": "Home hero + 5 pillar cards + live counters (stat-community-members 67->68 after registration). Register -> /profile, logout, re-login all work. Calorie calculator BMR 1618 / maintenance 2507 / range 2407-2607. Food search 'Apple' filters to 1 card. Jala 9-step journey + 10-parameter explorer. Swara Sa/Pa/Ni detail panel with local images and frequency. Manas 3D brain canvas + 9 region buttons. Reaction Time (3 rounds, POST /api/games/score 200, dashboard 3 played / best 171 ms / recent list) and Number Memory (level 3 -> best memory 3). AI chat streamed a correct answer. Contact form shows 4 inline validation errors then submits successfully. Admin dashboard renders 3 charts + all 7 tabs. Mobile 390x844 /swara: text-selector cards stack, language buttons wrap, no horizontal overflow.",
+    "auth_playbook": "bcrypt hash stored in users.password_hash starts with $2b$12$ (60 chars); login sets httpOnly+Secure access_token and refresh_token cookies; brute-force lockout returns 429 on the 6th consecutive failure (5x401 then 429); CORS_ORIGINS is explicit in backend/.env (see minor CORS note about the wildcard header seen at the ingress)."
+  },
+  "context_for_next_testing_agent": "New pytest module /app/backend/tests/test_texts.py covers the whole /api/texts surface, TTS audio (all 3 slugs, sa/te/ta), fallback disclosure and local-image serving; test_chalisa.py was left untouched and still passes as legacy /api/swara/chalisa coverage (so the new endpoints are covered in a separate file rather than by rewriting it). Run test_gating_switch.py with -n 0 only; it restores gating to OFF. First TTS generation for a fresh verse/lang can take up to ~60s — cached keys make reruns fast. Seeded free user qa3_1788274349...@dvtest.com already has 4 game scores, useful for dashboard assertions. Note the register endpoint is rate limited to 10/hour per ingress IP.",
+  "rca_of_the_issue": "Not applicable — no defect reproduced this iteration. The reported English accent on Indic recitation remains present by design because the OpenAI TTS fallback path is active (no ElevenLabs key); the code correctly selects eleven_multilingual_v2 whenever ELEVENLABS_API_KEY is set, sends Devanagari rather than transliteration for recitation, and the UI discloses the limitation, which is what was asked for."
+}

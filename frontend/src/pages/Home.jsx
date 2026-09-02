@@ -20,11 +20,11 @@ const HIGHLIGHTS = [
 ];
 
 const GALLERY = [
-  { url: "https://images.unsplash.com/photo-1610492219815-f76905e3f084?crop=entropy&cs=srgb&fm=jpg&q=80&w=1400", caption: "Ahara — whole foods across categories", alt: "Wooden board with sliced fruits, vegetables and nuts" },
-  { url: "https://images.unsplash.com/photo-1696371269814-ae41fc67cf03?crop=entropy&cs=srgb&fm=jpg&q=80&w=1400", caption: "Jala — groundwater reaching the surface", alt: "Water gushing from a borewell pipe" },
-  { url: "https://images.unsplash.com/photo-1579018371841-0f7e275dd50f?crop=entropy&cs=srgb&fm=jpg&q=80&w=1400", caption: "Swara — sound, vibration and voice", alt: "Musician playing a long-necked string instrument" },
-  { url: "https://images.unsplash.com/photo-1600618528240-fb9fc964b853?crop=entropy&cs=srgb&fm=jpg&q=80&w=1400", caption: "Manas — attention, memory and calm", alt: "Woman sitting cross-legged on a wooden deck at sunrise" },
-  { url: "https://images.unsplash.com/photo-1622322977767-2c71d1787205?crop=entropy&cs=srgb&fm=jpg&q=80&w=1400", caption: "Treatment — where water is made safe", alt: "Aerial view of a circular water treatment clarifier" },
+  { url: "/images/ahara-board.jpg", caption: "Ahara — whole foods across categories", alt: "Wooden board with sliced fruits, vegetables and nuts" },
+  { url: "/images/jala-borewell.jpg", caption: "Jala — groundwater reaching the surface", alt: "Water gushing from a borewell pipe" },
+  { url: "/images/swara-musician.jpg", caption: "Swara — sound, vibration and voice", alt: "Musician playing a long-necked string instrument" },
+  { url: "/images/manas-deck.jpg", caption: "Manas — attention, memory and calm", alt: "Woman sitting cross-legged on a wooden deck at sunrise" },
+  { url: "/images/jala-treatment.jpg", caption: "Treatment — where water is made safe", alt: "Aerial view of a circular water treatment clarifier" },
 ];
 
 function Counter({ value, testid }) {
@@ -120,8 +120,8 @@ export default function Home() {
           <div className="dv-rise lg:col-span-5" style={{ animationDelay: "160ms" }}>
             <div className="relative overflow-hidden rounded-[28px] border border-slate-200">
               <img
-                src="https://images.pexels.com/photos/32629853/pexels-photo-32629853.jpeg?auto=compress&cs=tinysrgb&w=1200"
-                alt="Calm natural landscape representing the Deha Veda ecosystem"
+                src="/images/hero-dv.jpg"
+                alt="A woman in a green saree standing at a temple water tank at sunrise, representing the Deha Veda ecosystem"
                 className="h-[280px] w-full object-cover sm:h-[420px]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/55 via-transparent to-transparent" />

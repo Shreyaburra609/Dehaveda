@@ -3,7 +3,7 @@ import { Volume2, Waves, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { api, apiError, GALLERIES } from "@/lib/api";
 import { AutoCarousel } from "@/components/AutoCarousel";
-import { HanumanChalisa } from "@/components/HanumanChalisa";
+import { DevotionalTexts } from "@/components/DevotionalTexts";
 import { ErrorState, Loading, PremiumLock, SectionHeading, Reveal } from "@/components/States";
 import { Seo } from "@/components/Seo";
 
@@ -15,19 +15,8 @@ export default function Swara() {
   const [error, setError] = useState("");
   const [selected, setSelected] = useState(0);
   const [playing, setPlaying] = useState(false);
-  const [chalisa, setChalisa] = useState(null);
-  const [chalisaError, setChalisaError] = useState("");
   const ctxRef = useRef(null);
 
-  const loadChalisa = async () => {
-    setChalisaError("");
-    try {
-      const { data: d } = await api.get("/swara/chalisa");
-      setChalisa(d);
-    } catch (err) {
-      setChalisaError(apiError(err, "Hanuman Chalisa could not be loaded. Please try again."));
-    }
-  };
 
   const load = async () => {
     setLoading(true);
@@ -44,7 +33,6 @@ export default function Swara() {
 
   useEffect(() => {
     load();
-    loadChalisa();
     return () => ctxRef.current?.close?.();
   }, []);
 
@@ -219,12 +207,7 @@ export default function Swara() {
               </p>
 
               <div className="mt-16">
-                <HanumanChalisa
-                  data={chalisa}
-                  loading={!chalisa && !chalisaError}
-                  error={chalisaError}
-                  onRetry={loadChalisa}
-                />
+                <DevotionalTexts />
               </div>
 
               <div className="mt-16">

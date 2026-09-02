@@ -49,8 +49,8 @@ export default function Manas() {
           </div>
           <div className="lg:col-span-5">
             <img
-              src={GALLERIES.manas[0].url}
-              alt={GALLERIES.manas[0].alt}
+              src="/images/pillar-manas.jpg"
+              alt="Translucent illustration of a human brain with glowing neural pathways"
               className="h-64 w-full rounded-2xl border border-slate-200 object-cover shadow-sm sm:h-72"
             />
           </div>

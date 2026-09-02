@@ -139,11 +139,11 @@ WATER_CONTAMINATION = [
 ]
 
 WATER_GALLERY = [
-    {"caption": "Groundwater rising from a borewell", "alt": "Water gushing from a borewell pipe into a field", "url": "https://images.unsplash.com/photo-1696371269814-ae41fc67cf03?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"},
-    {"caption": "Traditional open well recharge structure", "alt": "Open stone-lined well beside a tree in a green field", "url": "https://images.unsplash.com/photo-1666385459516-7b184743ba77?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"},
-    {"caption": "Clarifier tank at a water treatment plant", "alt": "Aerial view of a circular water treatment clarifier", "url": "https://images.unsplash.com/photo-1622322977767-2c71d1787205?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"},
-    {"caption": "Hand pump drawing shallow groundwater", "alt": "Iron hand pump standing in sandy soil near farmland", "url": "https://images.unsplash.com/photo-1677907564161-7279d5aac75f?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"},
-    {"caption": "River water, a common surface source", "alt": "River flowing between green banks", "url": "https://images.unsplash.com/photo-1661695013455-b2edf4983179?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"},
+    {"caption": "Groundwater rising from a borewell", "alt": "Water gushing from a borewell pipe into a field", "url": "/images/jala-borewell.jpg"},
+    {"caption": "Traditional open well recharge structure", "alt": "Open stone-lined well beside a tree in a green field", "url": "/images/jala-well.jpg"},
+    {"caption": "Clarifier tank at a water treatment plant", "alt": "Aerial view of a circular water treatment clarifier", "url": "/images/jala-treatment.jpg"},
+    {"caption": "Hand pump drawing shallow groundwater", "alt": "Iron hand pump standing in sandy soil near farmland", "url": "/images/jala-handpump.jpg"},
+    {"caption": "River water, a common surface source", "alt": "River flowing between green banks", "url": "/images/jala-river.jpg"},
 ]
 
 SWARAS = [
